@@ -30,13 +30,22 @@ jobs:
           draft: false
           prerelease: false
           
-      - name: Dump steps context
+      - name: Dump some context and values
         env:
           STEPS_CONTEXT: ${{ toJson(steps) }}
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+          JOB_CONTEXT: ${{ toJson(job) }}
+          WORK_DIR: ${{ github.workspace }}
         run: |
          echo "$STEPS_CONTEXT"
+         echo " "
          echo "$GITHUB_CONTEXT"
+         echo " "
          echo "$JOB_CONTEXT"
+         echo " "
+         echo "$WORK_DIR"
+         echo " "
+         pwd
         
       - name: Upload Release Asset
         id: upload-release-asset 
@@ -46,7 +55,7 @@ jobs:
           STEPS_CONTEXT: ${{ toJson(steps) }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: ./**/target/*.jar
+          asset_path: '**/target/*.jar'
           asset_name: my-artifact.zip
           asset_content_type: application/zip
           
