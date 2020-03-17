@@ -16,7 +16,8 @@ jobs:
         id: build_project
         run: |
           zip --junk-paths my-artifact README.md
-          echo "::set-output name=artifact::$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)-$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout).jar"
+          echo "set-output name=artifact-id::$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)"
+          echo "::set-output name=artifact-version::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
           mvn -B package --file pom.xml
       - name: Create Release
         id: create_release
@@ -27,8 +28,8 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
           JOB_CONTEXT: ${{ toJson(job) }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: ${{ steps.build_project.outputs.artifact-id }}
+          release_name: Release ${{ steps.build_project.outputs.artifact-id }}
           draft: false
           prerelease: false
           
@@ -48,7 +49,7 @@ jobs:
          echo "$WORK_DIR"
          echo " "
          ls -al
-         echo artifact = ${{ steps.build_project.outputs.artifact }}
+         echo artifact = ${{ steps.build_project.outputs.artifact-id }}-${{ steps.build_project.outputs.artifact-version }}.jar
         
       - name: Upload Release Asset
         id: upload-release-asset 
@@ -57,10 +58,9 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           STEPS_CONTEXT: ${{ toJson(steps) }}
         with:
-
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: target/${{ steps.build_project.outputs.artifact }}
-          asset_name: ${{ steps.build_project.outputs.artifact }}
+          asset_path: target/${{ steps.build_project.outputs.artifact-id }}-${{ steps.build_project.outputs.artifact-version }}.jar
+          asset_name: ${{ steps.build_project.outputs.artifact-id }}-${{ steps.build_project.outputs.artifact-version }}.jar
           asset_content_type: application/zip
           
       - name: Dump steps context
