@@ -5,7 +5,7 @@
     <groupId>org.jsanchez.actions</groupId>
     <artifactId>test-actions</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <name>test-actions</name>
     <url>https://github.com/jorgesanchezperez/test-actions</url>
     
