@@ -13,6 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Build project # This would actually build your project, using zip for an example artifact
+        id: build_project
         run: |
           zip --junk-paths my-artifact README.md
           echo "::set-output name=artifact::$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)-$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout).jar"
@@ -47,7 +48,7 @@ jobs:
          echo "$WORK_DIR"
          echo " "
          ls -al
-         echo artifact = ${{ steps.create_release.outputs.artifact }}
+         echo artifact = ${{ steps.build_project.outputs.artifact }}
         
       - name: Upload Release Asset
         id: upload-release-asset 
@@ -59,7 +60,7 @@ jobs:
 
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
           asset_path: target/${{ steps.create_release.outputs.artifact }}
-          asset_name: ${{ steps.create_release.outputs.artifact }}
+          asset_name: ${{ steps.build_project.outputs.artifact }}
           asset_content_type: application/zip
           
       - name: Dump steps context
