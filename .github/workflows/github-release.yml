@@ -32,9 +32,10 @@ jobs:
       - name: Dump steps context
         env:
           STEPS_CONTEXT: ${{ toJson(steps) }}
-      - run: echo "$STEPS_CONTEXT"
-      - run: echo "$GITHUB_CONTEXT"
-      - run: echo "$JOB_CONTEXT"
+        run: |
+         echo "$STEPS_CONTEXT"
+         echo "$GITHUB_CONTEXT"
+         echo "$JOB_CONTEXT"
         
       - name: Upload Release Asset
         id: upload-release-asset 
