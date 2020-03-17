@@ -14,13 +14,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: prepare artifact
+        id: prepare
+        run: |
+          echo "::set-output name=artifact-id::$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)"
+          echo "::set-output name=artifact-version::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
+
       - name: Build project # This would actually build your project, using zip for an example artifact
         id: build_project
-        run: |
-          zip --junk-paths my-artifact README.md
-          echo "set-output name=artifact-id::$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)"
-          echo "::set-output name=artifact-version::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
-          mvn -B package --file pom.xml
+        run: mvn -B package --file pom.xml
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -30,8 +33,8 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
           JOB_CONTEXT: ${{ toJson(job) }}
         with:
-          tag_name: ${{ steps.build_project.outputs.artifact-id }}
-          release_name: Release ${{ steps.build_project.outputs.artifact-id }}
+          tag_name: v${{ steps.prepare.outputs.artifact-version }}
+          release_name: Release v${{ steps.prepare.outputs.artifact-version }}
           draft: false
           prerelease: false
           
@@ -60,9 +63,9 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           STEPS_CONTEXT: ${{ toJson(steps) }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: target/${{ steps.build_project.outputs.artifact-id }}-${{ steps.build_project.outputs.artifact-version }}.jar
-          asset_name: ${{ steps.build_project.outputs.artifact-id }}-${{ steps.build_project.outputs.artifact-version }}.jar
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: target/${{ steps.prepare.outputs.artifact-id }}-${{ steps.build_project.outputs.artifact-version }}.jar # reference from 'prepare' step artifact-id and artifact-version output
+          asset_name: ${{ steps.prepare.outputs.artifact-id }}-${{ steps.build_project.outputs.artifact-version }}.jar # reference from 'prepare' step artifact-id and artifact-version output
           asset_content_type: application/zip
           
       - name: Dump steps context
