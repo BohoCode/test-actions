@@ -14,11 +14,22 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Set up forgerock maven repository
+        uses: actions/setup-java@v1
+        with: # running setup-java and overwrites the settings.xml
+          java-version: '11'
+          architecture: x64
+          server-id: central # Value of the distributionManagement/repository/id field of the pom.xml
+          server-username: MAVEN_USERNAME # env variable for username in deploy
+          server-password: MAVEN_CENTRAL_TOKEN # env variable for token in deploy
+
       - name: prepare artifact
         id: prepare
         run: |
           echo "::set-output name=artifact-id::$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)"
           echo "::set-output name=artifact-version::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
+          cat settings.xml
 
       - name: Build project # This would actually build your project, using zip for an example artifact
         id: build_project
