@@ -32,7 +32,7 @@ jobs:
           cat /home/runner/.m2/settings.xml
 
       - name: Set up forgerock maven repository
-        if: contains(${{ steps.prepare.outputs.artifact-version }}, 'SNAPSHOT')
+        if: contains(steps.prepare.outputs.artifact-version, 'SNAPSHOT')
         uses: actions/setup-java@v1
         with: # add snapshots repository on the settings.xml
           java-version: '11'
@@ -61,7 +61,7 @@ jobs:
         with:
           tag_name: v${{ steps.prepare.outputs.artifact-version }}
           release_name: Release v${{ steps.prepare.outputs.artifact-version }}
-          draft: false
+          draft: true
           prerelease: false
           
       - name: Dump some context and values
