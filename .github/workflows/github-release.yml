@@ -24,7 +24,15 @@ jobs:
           server-username: MAVEN_USERNAME # env variable for username in deploy
           server-password: MAVEN_CENTRAL_TOKEN # env variable for token in deploy
 
+      - name: prepare artifact
+        id: prepare
+        run: |
+          echo "::set-output name=artifact-id::$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)"
+          echo "::set-output name=artifact-version::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
+          cat /home/runner/.m2/settings.xml
+
       - name: Set up forgerock maven repository
+        if: contains(${{ steps.prepare.outputs.artifact-version }}, 'SNAPSHOT')
         uses: actions/setup-java@v1
         with: # add snapshots repository on the settings.xml
           java-version: '11'
@@ -32,13 +40,6 @@ jobs:
           server-id: snapshots # Value of the distributionManagement/repository/id field of the pom.xml
           server-username: MAVEN_USERNAME # env variable for username in deploy
           server-password: MAVEN_CENTRAL_TOKEN # env variable for token in deploy
-
-      - name: prepare artifact
-        id: prepare
-        run: |
-          echo "::set-output name=artifact-id::$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)"
-          echo "::set-output name=artifact-version::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
-          cat /home/runner/.m2/settings.xml
 
       - name: Build project # This would actually build your project, using zip for an example artifact
         id: build_project
