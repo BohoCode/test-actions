@@ -41,6 +41,11 @@ jobs:
           server-username: MAVEN_USERNAME # env variable for username in deploy
           server-password: MAVEN_CENTRAL_TOKEN # env variable for token in deploy
 
+      - name: prepare artifact
+        id: prepare_snapshots
+        run: |
+          cat /home/runner/.m2/settings.xml
+
       - name: Build project # This would actually build your project, using zip for an example artifact
         id: build_project
         run: mvn -B package --file pom.xml
