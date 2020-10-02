@@ -18,7 +18,8 @@ jobs:
 
       - name: discover latest releases to push assets
         id: discover_latest_release
-        run: curl $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/releases/latest
+        run: |
+          curl -H "Accept: application/vnd.github.v3+json" $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/releases/latest
 
       - name: Upload Release Asset
         id: upload_release_asset
