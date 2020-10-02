@@ -13,8 +13,8 @@ jobs:
       
       - name: echo values
         run: |
-	echo ${{ github.ref }}
-	echo ${{ GITHUB_API_URL }}/repos/${{ GITHUB_REPOSITORY }}releases/latest
+	  echo ${{ github.ref }}
+	  echo ${{ GITHUB_API_URL }}/repos/${{ GITHUB_REPOSITORY }}releases/latest
 
       - name: discover latest releases to push assets
 	id: discover_latest_release
