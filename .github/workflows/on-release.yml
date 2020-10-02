@@ -13,13 +13,12 @@ jobs:
       
       - name: echo values
         run: |
-          echo "${{ github.ref }}"
-	  echo "${{ GITHUB_API_URL }}"
-          echo "${{ GITHUB_REPOSITORY }}"
-	  
+          echo ${{ github.ref }}
+          echo ${{ GITHUB_API_URL }}/repos/${{ GITHUB_REPOSITORY }}releases/latest
+
       - name: discover latest releases to push assets
-	id: discover_latest_release
-	run: curl ${{ GITHUB_API_URL }}/repos/${{ GITHUB_REPOSITORY }}releases/latest
+        id: discover_latest_release
+        run: curl ${{ GITHUB_API_URL }}/repos/${{ GITHUB_REPOSITORY }}releases/latest
 
       - name: Upload Release Asset
         id: upload_release_asset
