@@ -21,13 +21,13 @@ jobs:
         run: curl ${{ GITHUB_API_URL }}/repos/${{ GITHUB_REPOSITORY }}releases/latest
 
       - name: Upload Release Asset
-        id: upload-release-asset 
+        id: upload_release_asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
           STEPS_CONTEXT: ${{ toJson(steps) }}
         with:
-          upload_url: ${{ steps.discover_latest_release.outputs.upload_url }}
+          upload_url: ${{ steps.upload_release_asset.outputs.upload_url }}
           asset_path: README.md
           asset_name: test-upload-README.md
           asset_content_type: text/markdown
