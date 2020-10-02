@@ -15,7 +15,7 @@ jobs:
         run: |
 	  echo ${{ github.ref }}
 	  echo ${{ GITHUB_API_URL }}/repos/${{ GITHUB_REPOSITORY }}releases/latest
-
+	  
       - name: discover latest releases to push assets
 	id: discover_latest_release
 	run: curl ${{ GITHUB_API_URL }}/repos/${{ GITHUB_REPOSITORY }}releases/latest
