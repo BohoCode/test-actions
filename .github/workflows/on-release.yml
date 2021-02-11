@@ -3,7 +3,7 @@ on:
   release:
     types: [published]
 env:
-  GITHUB_SHA: ${{ github.ref }}
+  GITHUB_SHA: ${{ github.sha }}
   VERSION: ${{ github.event.release.tag_name }}-${GITHUB_SHA::7}
   VERSIONDOS: ${{ github.ref }}-${{ github.sha }}
 jobs:
@@ -29,6 +29,8 @@ jobs:
         id: discover_latest_release
         run: |
           curl -H "Accept: application/vnd.github.v3+json" $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/releases/latest
+          echo "::set-output name=artifact-version::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
+          echo "artifact version ${artifact-version}"
 
       - name: Upload Release Asset
         id: upload_release_asset
