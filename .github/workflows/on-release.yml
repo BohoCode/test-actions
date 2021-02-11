@@ -3,8 +3,8 @@ on:
   release:
     types: [published]
 env:
-  VERSION: ${{ github.event.release.tag_name }}
-  VERSIONDOS: ${{ github.ref }}
+  VERSION: ${{ github.event.release.tag_name }}-${GITHUB_SHA::7}
+  VERSIONDOS: ${{ github.ref }}-${{ github.sha }}
 jobs:
   publish:
     runs-on: ubuntu-latest
