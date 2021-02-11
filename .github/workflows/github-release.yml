@@ -5,7 +5,10 @@ on:
     tags:
       - '*'
     branches:
-      - master
+      - master    
+env:
+  - BUILD_VERSION=${{ github.event.release.tag_name }}-${GITHUB_SHA::7}
+  
 
 jobs:
   build:
@@ -29,6 +32,7 @@ jobs:
         run: |
           echo "::set-output name=artifact-id::$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)"
           echo "::set-output name=artifact-version::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
+          echo "build version $BUILD_VERSION"
           cat /home/runner/.m2/settings.xml
 
       - name: Set up forgerock maven repository
