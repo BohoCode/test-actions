@@ -19,8 +19,8 @@ jobs:
           echo ${{ github.ref }}
           echo $VERSION
           echo $VERIONDOS
-          echo "VERSION ${VERSION} - ${{ VERSION }}
-          echo "VERSION ${VERSIONDOS} - ${{ VERSIONDOS }} 
+          echo "VERSION ${VERSION} - ${{ VERSION }}"
+          echo "VERSION ${VERSIONDOS} - ${{ VERSIONDOS }}"
           echo $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/releases/latest
 
       - name: discover latest releases to push assets
