@@ -7,7 +7,7 @@ on:
     branches:
       - master    
 env:
-  BUILD_VERSION=${{ github.event.release.tag_name }}
+  BUILD_VERSION: ${{ github.event.release.tag_name }}
   
 
 jobs:
