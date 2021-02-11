@@ -4,7 +4,7 @@ on:
     types: [published]
 env:
   VERSION: ${{ github.event.release.tag_name }}-${GITHUB_SHA::7}
-  VERSIONDOS: ${{ github.ref }}-${{ github.sha }::7}
+  VERSIONDOS: ${{ github.ref }}-${{ github.sha }}
   VERSIONtres: ${{ github.ref }}-${{ github.sha::7 }}
 jobs:
   publish:
