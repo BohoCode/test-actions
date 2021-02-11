@@ -17,8 +17,6 @@ jobs:
       - name: echo values
         run: |
           echo ${{ github.ref }}
-          echo $VERSION
-          echo $VERIONDOS
           echo "VERSION ${VERSION} - ${{ VERSION }}"
           echo "VERSION ${VERSIONDOS} - ${{ VERSIONDOS }}"
           echo $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/releases/latest
