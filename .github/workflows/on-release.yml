@@ -16,6 +16,7 @@ jobs:
           ref: ${{ github.ref }}
       
       - name: echo values
+        id: values
         run: |
           echo ${{ github.ref }}
           echo $VERSION
@@ -23,14 +24,14 @@ jobs:
           echo "ver ${VERSION}"
           echo "ver ${VERSIONDOS}"
           echo "ver ${VERSIONtres}"
-          echo $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/releases/latest
+          echo $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/releases/latest          
+          echo "::set-output name=artifact-version::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
 
       - name: discover latest releases to push assets
         id: discover_latest_release
         run: |
           curl -H "Accept: application/vnd.github.v3+json" $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/releases/latest
-          echo "::set-output name=artifact-version::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
-          echo "artifact version ${artifact-version}"
+          echo "artifact version ${{ steps.values.outputs.artifact-version }}"
 
       - name: Upload Release Asset
         id: upload_release_asset
