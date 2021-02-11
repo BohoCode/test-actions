@@ -32,7 +32,7 @@ jobs:
         run: |
           echo "::set-output name=artifact-id::$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)"
           echo "::set-output name=artifact-version::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
-          echo "build version $BUILD_VERSION"
+          echo "build version ${BUILD_VERSION}"
           echo "tag name ${GITHUB_REF/refs\/tags\//}"
           cat /home/runner/.m2/settings.xml
 
