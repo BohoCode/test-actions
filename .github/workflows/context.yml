@@ -12,7 +12,7 @@ jobs:
         id: prepare
         run: |
           echo "GITHUB_USER=$(echo ${{ github.actor }} | tr '[:upper:]' '[:lower:]')" >> ${GITHUB_ENV}
-          echo "user=$GITHUB_USER"
+          echo "user=${{GITHUB_USER}}"
           echo "::set-output name=actor::${{ github.actor }} | tr '[:upper:]' '[:lower:]'"
       - name: Dump GitHub context
         env:
