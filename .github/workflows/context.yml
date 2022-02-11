@@ -13,7 +13,8 @@ jobs:
         env:
           UPPERCASE_VAR: "HELLO"
         run: |
-          INPUT=${{ env.UPPERCASE_VAR }} echo "::set-output name=lowerCaseValue::${INPUT,,}"
+          INPUT=${{ env.UPPERCASE_VAR }}
+          echo "::set-output name=lowerCaseValue::${INPUT,,}"
           echo "GITHUB_USER=$(echo BohoCode | tr '[:upper:]' '[:lower:]')" >> ${GITHUB_ENV}
           echo "user=${{ env.GITHUB_USER }}"
           echo "::set-output name=actor::${{ github.actor }} | tr '[:upper:]' '[:lower:]'"
