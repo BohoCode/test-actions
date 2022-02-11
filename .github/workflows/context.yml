@@ -6,10 +6,23 @@ jobs:
   one:
     runs-on: ubuntu-16.04
     steps:
+      - name: Dump GitHub actor
+        env:
+        run: echo "${{ github.actor }}"
+      - name: prepare actor
+        id: prepare
+        run: |
+          echo "::set-output name=actor::${{ github.actor }}"
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
+        run: |
+          echo actor = ${{ steps.prepare.outputs.actor.lowercase }}
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo "$GITHUB_CONTEXT"
       - name: Dump job context
         env:
           JOB_CONTEXT: ${{ toJson(job) }}
