@@ -23,6 +23,7 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: |
           echo actor = ${{ steps.prepare.outputs.actor.lowerCaseValue }}
+          echo user = ${{ env.GITHUB_USER }}
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
