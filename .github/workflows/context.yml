@@ -7,7 +7,6 @@ jobs:
     runs-on: ubuntu-16.04
     steps:
       - name: Dump GitHub actor
-        env:
         run: echo "${{ github.actor }}"
       - name: prepare actor
         id: prepare
