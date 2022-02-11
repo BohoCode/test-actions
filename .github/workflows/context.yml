@@ -11,7 +11,7 @@ jobs:
       - name: prepare actor
         id: prepare
         run: |
-          echo GITHUB_USER=$(echo ${{ github.actor }} | tr '[:upper:]' '[:lower:]') >> $GITHUB_USER
+          echo GITUSER=$(echo ${{ github.actor }} | tr '[:upper:]' '[:lower:]') >> $GITHUB_USER
           echo "user=$GITHUB_USER"
           echo "::set-output name=actor::${{ github.actor }} | tr '[:upper:]' '[:lower:]'"
       - name: Dump GitHub context
