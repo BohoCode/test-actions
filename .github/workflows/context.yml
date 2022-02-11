@@ -12,6 +12,8 @@ jobs:
         id: prepare
         run: |
           echo "::set-output name=actor::${{ github.actor }}"
+          echo ::set-env name=GITHUB_USER::$(echo ${{ github.actor }} | tr '[:upper:]' '[:lower:]')
+          echo "github-user=$GITHUB_USER"
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
