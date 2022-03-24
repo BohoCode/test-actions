@@ -10,4 +10,20 @@ to test actions
 |Tag|[![GitHub release](https://img.shields.io/github/v/tag/jorgesanchezperez/test-actions?sort=semver)](https://GitHub.com/jorgesanchezperez/test-actions/tags/)|
 |License|![license](https://img.shields.io/github/license/ACRA/acra.svg)|
 
+### Squash commits into one
+https://www.internalpointers.com/post/squash-commits-into-one-git
 
+```shell
+git rebase --interactive ${commit-hash}
+```
+```shell
+git rebase --interactive HEAD~N
+```
+**Shorter**
+```shell
+git rebase -i ${commit-hash}
+```
+```shell
+git rebase -i HEAD~N
+```
+>Where N is the number of commits you want to join, starting from the most recent one
