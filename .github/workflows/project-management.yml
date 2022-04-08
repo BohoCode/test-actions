@@ -17,9 +17,10 @@ jobs:
         uses: kiali/kiali-epic-action@v1.0.1
         with:
           TOKEN: ${{ secrets.GH_TOKEN }}
-      - name: Run epics action
-        uses: cloudaper/epics-action@v1.1.4
-        with:
-          github-token: ${{ secrets.GH_TOKEN }}
-          epic-label-name: feature
-          auto-close-epic: true
+#      - name: Run epics action
+#        needs: sync-epic
+#        uses: cloudaper/epics-action@v1.1.4
+#        with:
+#          github-token: ${{ secrets.GH_TOKEN }}
+#          epic-label-name: feature
+#          auto-close-epic: true
