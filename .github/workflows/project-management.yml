@@ -4,7 +4,7 @@ on:
     types: [opened, edited, closed, reopened, labeled]
 jobs:
   sync-epic-job:
-    if: contains(github.event.issue.labels.*.name, 'subtask')
+    #if: contains(github.event.issue.labels.*.name, 'subtask')
     runs-on: ubuntu-latest
     name: Sync epic issues with subtasks issues
     steps:
