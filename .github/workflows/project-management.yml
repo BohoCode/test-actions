@@ -1,13 +1,14 @@
 name: Update epics
 on:
   issues:
-    types: [opened, edited, closed, reopened, labeled]
+    types: [edited, closed, reopened, labeled]
 jobs:
   epics:
     runs-on: ubuntu-latest
     name: Update epic issues
     steps:
       - name: Sync Epic Issues
+        if: contains(github.event.issue.labels.*.name, 'subtask')
         id: sync-epic
         uses: kiali/kiali-epic-action@v1.0.1
         with:
