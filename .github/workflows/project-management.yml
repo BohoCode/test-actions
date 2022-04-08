@@ -1,7 +1,7 @@
 name: Update epics
 on:
   issues:
-    types: [opened, closed, reopened]
+    types: [opened, edited, closed, reopened, labeled]
 jobs:
   sync-epic-job:
     if: contains(github.event.issue.labels.*.name, 'subtask')
