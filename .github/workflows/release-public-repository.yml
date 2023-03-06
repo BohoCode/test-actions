@@ -1,0 +1,50 @@
+name: Release secure api parent workflow
+# **What it does**: Build the maven project as release version and publish the artifact in forgerock maven repo
+# **Artifacts**: parent Project Object Model (super POM)
+# **Artifact repository**: https://maven.forgerock.org/artifactory/community/com/forgerock/sapi/gateway/
+on:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: "Specific release number/name, otherwise maven release version"
+        required: false
+        type: string
+      deploy_publish:
+        description: "Flag for deployment and publish into repository"
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    name: Deploy release
+    steps:
+      # https://github.com/actions/setup-java#caching-packages-dependencies
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'adopt'
+          java-version: '14'
+          architecture: x64
+          cache: 'maven'
+          server-id: maven.forgerock.org-community # Value of the distributionManagement/repository/id field of the pom.xml
+          server-username: MAVEN_REPO_USERNAME # env variable for username in deploy
+          server-password: MAVEN_REPO_TOKEN # env variable for token in deploy
+
+      - name: Get version
+        run: |
+          echo "VERSION=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )" >> $GITHUB_ENV
+          echo "Version is $VERSION"
+        id: get_version
+
+      - name: checkout secure-api-gateway-parent
+        uses: actions/checkout@v3
+        with:
+          repository: SecureApiGateway/secure-api-gateway-parent
+          path: secure-api-gateway-parent
+        run: |
+          echo "${{ inputs.release_version}}"
+
+      - name: release performance
+        working-directory: secure-api-gateway-parent
+        run: mvn -B release:clean release:prepare release:perform -DdryRun=true
