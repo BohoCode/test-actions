@@ -20,6 +20,11 @@ jobs:
     runs-on: ubuntu-latest
     name: Deploy release
     steps:
+      - name: checkout secure-api-gateway-parent
+        uses: actions/checkout@v3
+        with:
+          repository: SecureApiGateway/secure-api-gateway-parent
+          path: secure-api-gateway-parent
       # https://github.com/actions/setup-java#caching-packages-dependencies
       - uses: actions/setup-java@v3
         with:
@@ -36,12 +41,6 @@ jobs:
           echo "VERSION=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )" >> $GITHUB_ENV
           echo "Version is $VERSION"
         id: get_version
-
-      - name: checkout secure-api-gateway-parent
-        uses: actions/checkout@v3
-        with:
-          repository: SecureApiGateway/secure-api-gateway-parent
-          path: secure-api-gateway-parent
       
       - name: show release version
         run: |
