@@ -42,6 +42,8 @@ jobs:
         with:
           repository: SecureApiGateway/secure-api-gateway-parent
           path: secure-api-gateway-parent
+      
+      - name: show release version
         run: |
           echo "${{ inputs.release_version}}"
 
