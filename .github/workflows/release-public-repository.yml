@@ -52,10 +52,15 @@ jobs:
       - name: show release version
         run: |
           echo "${{ inputs.release_version }}"
+          cd secure-api-gateway-parent
+          ls -al
+          git checkout -b release/release-$VERSION
+          git remote -v
+          git push origin release/release-$VERSION
 
-      - name: release performance
-        working-directory: secure-api-gateway-parent
-        run: mvn -B release:clean release:prepare release:perform -DskipChangelog=true
-        env:
-          MAVEN_REPO_USERNAME: ${{ secrets.FR_ARTIFACTORY_USER }}
-          MAVEN_REPO_TOKEN: ${{ secrets.FR_ARTIFACTORY_TOKEN }}
+      #- name: release performance
+      #  working-directory: secure-api-gateway-parent
+      #  run: mvn -B release:clean release:prepare -DskipChangelog=true
+      #  env:
+      #    MAVEN_REPO_USERNAME: ${{ secrets.FR_ARTIFACTORY_USER }}
+      #    MAVEN_REPO_TOKEN: ${{ secrets.FR_ARTIFACTORY_TOKEN }}
