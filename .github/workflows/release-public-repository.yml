@@ -44,10 +44,18 @@ jobs:
           echo "Version is $VERSION"
         id: get_version
       
+      - name: Set author identity
+        run: |
+          git config --global user.email ${{ secrets.GIT_COMMIT_AUTHOR_EMAIL }}
+          git config --global user.name ${{ secrets.GIT_COMMIT_USERNAME }}
+          
       - name: show release version
         run: |
-          echo "${{ inputs.release_version}}"
+          echo "${{ inputs.release_version }}"
 
       - name: release performance
         working-directory: secure-api-gateway-parent
         run: mvn -B release:clean release:prepare release:perform -DskipChangelog=true
+        env:
+          MAVEN_REPO_USERNAME: ${{ secrets.FR_ARTIFACTORY_USER }}
+          MAVEN_REPO_TOKEN: ${{ secrets.FR_ARTIFACTORY_TOKEN }}
