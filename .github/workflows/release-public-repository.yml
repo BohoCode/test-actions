@@ -50,4 +50,4 @@ jobs:
 
       - name: release performance
         working-directory: secure-api-gateway-parent
-        run: mvn -B release:clean release:prepare release:perform
+        run: mvn -B release:clean release:prepare release:perform -DskipChangelog=true
