@@ -40,8 +40,9 @@ jobs:
 
       - name: Get version
         run: |
+          mvn help:evaluate -Dexpression=project.version -q -DforceStdout
           echo "VERSION=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )" >> $GITHUB_ENV
-          echo "Version is ${{ env.VERSION }}"
+          echo "Version is $VERSION"
         id: get_version
       
       - name: Set author identity
@@ -55,8 +56,9 @@ jobs:
           cd secure-api-gateway-parent
           ls -al
           git checkout -b release/release-${{ env.VERSION }}
+          git branchs
           git remote -v
-          git remote set-url origin https://${{ secrets.GIT_COMMIT_USERNAME }}:${{ secrets.API_TOKEN_GITHUB }}@github.com/SecureApiGateway/secure-api-gateway-parent.git
+          git remote set-url origin https://${{ secrets.GIT_COMMIT_USERNAME }}:${{ secrets.ACCESS_TOKEN_RELEASE }}@github.com/SecureApiGateway/secure-api-gateway-parent.git
           git push origin release/release-${{ env.VERSION }}
 
       #- name: release performance
