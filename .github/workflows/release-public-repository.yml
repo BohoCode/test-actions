@@ -56,7 +56,7 @@ jobs:
           ls -al
           git checkout -b release/release-${{ env.VERSION }}
           git remote -v
-          git remote set-url origin https://${{ secrets.GIT_COMMIT_USERNAME }}:${{ secrets.API_TOKEN_GITHUB }}github.com/SecureApiGateway/secure-api-gateway-parent.git
+          git remote set-url origin https://${{ secrets.GIT_COMMIT_USERNAME }}:${{ secrets.API_TOKEN_GITHUB }}@github.com/SecureApiGateway/secure-api-gateway-parent.git
           git push origin release/release-${{ env.VERSION }}
 
       #- name: release performance
