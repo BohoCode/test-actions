@@ -9,11 +9,6 @@ on:
         description: "Specific release number/name, otherwise maven release version"
         required: false
         type: string
-      deploy_publish:
-        description: "Flag for deployment and publish into repository"
-        required: false
-        default: false
-        type: boolean
 
 jobs:
   publish:
@@ -26,7 +21,7 @@ jobs:
           repository: SecureApiGateway/secure-api-gateway-parent
           path: secure-api-gateway-parent
           ref: issue/812-action-release-no-to-merge
-          token: ${{ secrets.ACCESS_TOKEN_RELEASE }}
+          #token: ${{ secrets.ACCESS_TOKEN_RELEASE }}
           
       # https://github.com/actions/setup-java#caching-packages-dependencies
       - uses: actions/setup-java@v3
