@@ -48,7 +48,7 @@ jobs:
           name: '${{ secrets.GIT_COMMIT_USERNAME }}'
           email: '${{ secrets.GIT_COMMIT_AUTHOR_EMAIL }}'
           actor: '${{ secrets.GIT_COMMIT_USERNAME }}'
-          token: '${{ secrets.ACCESS_TOKEN_RELEASE }}'
+          token: '${{ secrets.GH_TOKEN }}'
         
       #- name: Set author identity
       #  run: |
