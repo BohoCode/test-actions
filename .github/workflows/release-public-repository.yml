@@ -5,10 +5,6 @@ name: Release secure api parent workflow
 on:
   workflow_dispatch:
     inputs:
-      release_name:
-        description: "Specific release name"
-        required: false
-        type: string
       tag:
         description: "Specific tag to build the release"
         required: false
@@ -22,10 +18,14 @@ jobs:
     name: Create release
     steps:
       - uses: actions/checkout@v3
+      - name: build artifact and publish on repository
+        run: |
+          mvn clean deploy -DaltDeploymentRepository=release::delfault::"https://${{ secrets.FR_ARTIFACTORY_USER }}:${{ secrets.FR_ARTIFACTORY_TOKEN }}@//maven.forgerock.org/repo/community"
       - name: Create release
         run: |
-          gh release create  ${{ inputs.tag }} -t "${{ inputs.release_name }} from ${{ inputs.tag }}" --generate-notes # generate a release draft from input tag
-          
+          # Create a release from input tag
+          gh release create  ${{ inputs.tag }} -t "${{ inputs.tag }}" # --generate-notes
+        
       #- name: checkout secure-api-gateway-parent
         #uses: actions/checkout@v3
         #with:
