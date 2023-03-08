@@ -20,7 +20,90 @@ jobs:
       - uses: actions/checkout@v3
       - name: build artifact and publish on repository
         run: |
+          mvn clean deploy -DaltDeploymentRepository=release::default::"https://${{ secrets.FR_ARTIFACTORY_USER }}:${{ secrets.FR_ARTIFACTORY_TOKEN }}@https://maven.forgerock.org/artifactory/community"
+# **What it does**: Build the maven project as release version and publish the artifact in forgerock maven repo
+# **Artifacts**: parent Project Object Model (super POM)
+# **Artifact repository**: https://maven.forgerock.org/artifactory/community/com/forgerock/sapi/gateway/
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Specific tag to build the release"
+        required: false
+        type: string
+env:
+  GH_TOKEN: ${{ github.token }}
+  
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    name: Create release
+    steps:
+      - uses: actions/checkout@v3
+      - name: build artifact and publish on repository
+        run: |
           mvn clean deploy -DaltDeploymentRepository=release::default::"https://${{ secrets.FR_ARTIFACTORY_USER }}:${{ secrets.FR_ARTIFACTORY_TOKEN }}@maven.forgerock.org/repo/community"
+      - name: Create release
+        run: |
+          # Create a release from input tag
+          gh release create  ${{ inputs.tag }} -t "${{ inputs.tag }}" # --generate-notes
+        
+      #- name: checkout secure-api-gateway-parent
+        #uses: actions/checkout@v3
+        #with:
+          #repository: SecureApiGateway/secure-api-gateway-parent
+          #path: secure-api-gateway-parent
+          #ref: issue/812-action-release-no-to-merge
+          #token: ${{ secrets.ACCESS_TOKEN_RELEASE }}
+          
+      # https://github.com/actions/setup-java#caching-packages-dependencies
+      #- uses: actions/setup-java@v3
+        #with:
+          #distribution: 'adopt'
+          #java-version: '14'
+          #architecture: x64
+          #cache: 'maven'
+          #server-id: maven.forgerock.org-community # Value of the distributionManagement/repository/id field of the pom.xml
+          #server-username: MAVEN_REPO_USERNAME # env variable for username in deploy
+          #server-password: MAVEN_REPO_TOKEN # env variable for token in deploy
+
+      #- name: Get version
+        #run: |
+          #cd secure-api-gateway-parent
+          #mvn help:evaluate -Dexpression=project.version -q -DforceStdout
+          #echo "VERSION=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )" >> $GITHUB_ENV
+          #echo "Version is $VERSION"
+        #id: get_version
+      
+      #- uses: oleksiyrudenko/gha-git-credentials@v2.1.1
+        #with:
+          #global: true
+          #name: '${{ secrets.GIT_COMMIT_USERNAME }}'
+          #email: '${{ secrets.GIT_COMMIT_AUTHOR_EMAIL }}'
+          #actor: '${{ secrets.GIT_COMMIT_USERNAME }}'
+          #token: '${{ secrets.GH_TOKEN }}'
+        
+      #- name: Set author identity
+      #  run: |
+      #    git config --global user.email ${{ secrets.GIT_COMMIT_AUTHOR_EMAIL }}
+      #    git config --global user.name ${{ secrets.GIT_COMMIT_USERNAME }}
+          
+      #- name: show release version
+        #run: |
+          #echo "${{ inputs.release_version }}"
+          #cd secure-api-gateway-parent
+          #ls -al
+          #git checkout -b release/release-${{ env.VERSION }}
+          #git remote -v
+          # git remote set-url origin https://${{ secrets.GIT_COMMIT_USERNAME }}:${{ secrets.ACCESS_TOKEN_RELEASE }}@github.com/SecureApiGateway/secure-api-gateway-parent.git
+          #git push origin release/release-${{ env.VERSION }}
+
+      #- name: release performance
+      #  working-directory: secure-api-gateway-parent
+      #  run: mvn -B release:clean release:prepare -DskipChangelog=true
+      #  env:
+      #    MAVEN_REPO_USERNAME: ${{ secrets.FR_ARTIFACTORY_USER }}
+      #    MAVEN_REPO_TOKEN: ${{ secrets.FR_ARTIFACTORY_TOKEN }}"
       - name: Create release
         run: |
           # Create a release from input tag
