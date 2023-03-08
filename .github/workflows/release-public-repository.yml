@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Create release
         run: |
-          gh release create  ${{ inputs.tag }} -t "Release ${{ inputs.tag }}" -d --generate_notes # generate a release draft from input tag
+          gh release create  ${{ inputs.tag }} -t "Release ${{ inputs.tag }}" -d --generate-notes # generate a release draft from input tag
           
       #- name: checkout secure-api-gateway-parent
         #uses: actions/checkout@v3
