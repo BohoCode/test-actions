@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: build artifact and publish on repository
         run: |
-          mvn clean deploy -DaltDeploymentRepository=release::delfault::"https://${{ secrets.FR_ARTIFACTORY_USER }}:${{ secrets.FR_ARTIFACTORY_TOKEN }}@//maven.forgerock.org/repo/community"
+          mvn clean deploy -DaltDeploymentRepository=release::default::https://${{ secrets.FR_ARTIFACTORY_USER }}:${{ secrets.FR_ARTIFACTORY_TOKEN }}@maven.forgerock.org/repo/community"
       - name: Create release
         run: |
           # Create a release from input tag
