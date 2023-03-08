@@ -1,12 +1,68 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.jsanchez.actions</groupId>
     <artifactId>test-actions</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.0</version>
+    <version>1.0.0-SNAPSHOT</version>
     <name>test-actions</name>
     <url>https://github.com/jorgesanchezperez/test-actions</url>
-    
+    <properties>
+        <maven-release-plugin.version>3.0.0-M1</maven-release-plugin.version>
+        <git-changelog-maven-plugin.version>1.63</git-changelog-maven-plugin.version>
+    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>${maven-release-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>se.bjurr.gitchangelog</groupId>
+                <artifactId>git-changelog-maven-plugin</artifactId>
+                <version>${git-changelog-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>changelog</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>git-changelog</goal>
+                        </goals>
+                        <inherited>false</inherited>
+                        <configuration>
+                            <noIssueName>test</noIssueName>
+                            <templateContent>
+                                <![CDATA[
+# Git Changelog Maven plugin changelog
+Changelog of Git Changelog Maven plugin.
+{{#tags}}
+## {{name}}
+ {{#issues}}
+  {{#hasLink}}
+### {{name}} [{{issue}}]({{link}}) {{title}}
+  {{/hasLink}}
+  {{#commits}}
+[{{hash}}](https://github.com/SecureBankingAcceleratorToolkit/securebanking-openbanking-aspsp/commit/{{hash}}) {{authorName}} *{{commitTime}}*
+{{{message}}}
+  {{/commits}}
+ {{/issues}}
+{{/tags}}
+]]>
+                            </templateContent>
+                            <file>CHANGELOG.md</file>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
 </project>
