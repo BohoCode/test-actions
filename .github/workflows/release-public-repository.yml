@@ -18,10 +18,23 @@ jobs:
     name: Create release
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.tag }}
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'adopt'
+          java-version: '14'
+          architecture: x64
+          cache: 'maven'
+
       - name: build artifact and publish on repository
+        id: deploy
         run: |
           mvn clean deploy -DaltDeploymentRepository=release::default::"https://${{ secrets.FR_ARTIFACTORY_USER }}:${{ secrets.FR_ARTIFACTORY_TOKEN }}@maven.forgerock.org/artifactory/community/"
+
       - name: Create release
+      - if: success()
         run: |
           # Create a release from input tag
           gh release create  ${{ inputs.tag }} -t "${{ inputs.tag }}" # --generate-notes
