@@ -9,61 +9,70 @@ on:
         description: "Specific release number/name, otherwise maven release version"
         required: false
         type: string
+      tag:
+        description: "Specific tag to build the release"
+        required: false
+        type: string
 
 jobs:
   publish:
     runs-on: ubuntu-latest
-    name: Deploy release
+    name: Create release
     steps:
-      - name: checkout secure-api-gateway-parent
-        uses: actions/checkout@v3
-        with:
-          repository: SecureApiGateway/secure-api-gateway-parent
-          path: secure-api-gateway-parent
-          ref: issue/812-action-release-no-to-merge
+      - uses: actions/checkout@v3
+      - name: Create release
+        run: |
+          gh release create  ${{ inputs.tag }} -t "Release ${{ inputs.tag }}" -d --generate_notes # generate a release draft from input tag
+          
+      #- name: checkout secure-api-gateway-parent
+        #uses: actions/checkout@v3
+        #with:
+          #repository: SecureApiGateway/secure-api-gateway-parent
+          #path: secure-api-gateway-parent
+          #ref: issue/812-action-release-no-to-merge
           #token: ${{ secrets.ACCESS_TOKEN_RELEASE }}
           
       # https://github.com/actions/setup-java#caching-packages-dependencies
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'adopt'
-          java-version: '14'
-          architecture: x64
-          cache: 'maven'
-          server-id: maven.forgerock.org-community # Value of the distributionManagement/repository/id field of the pom.xml
-          server-username: MAVEN_REPO_USERNAME # env variable for username in deploy
-          server-password: MAVEN_REPO_TOKEN # env variable for token in deploy
+      #- uses: actions/setup-java@v3
+        #with:
+          #distribution: 'adopt'
+          #java-version: '14'
+          #architecture: x64
+          #cache: 'maven'
+          #server-id: maven.forgerock.org-community # Value of the distributionManagement/repository/id field of the pom.xml
+          #server-username: MAVEN_REPO_USERNAME # env variable for username in deploy
+          #server-password: MAVEN_REPO_TOKEN # env variable for token in deploy
 
-      - name: Get version
-        run: |
-          cd secure-api-gateway-parent
-          mvn help:evaluate -Dexpression=project.version -q -DforceStdout
-          echo "VERSION=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )" >> $GITHUB_ENV
-          echo "Version is $VERSION"
-        id: get_version
+      #- name: Get version
+        #run: |
+          #cd secure-api-gateway-parent
+          #mvn help:evaluate -Dexpression=project.version -q -DforceStdout
+          #echo "VERSION=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )" >> $GITHUB_ENV
+          #echo "Version is $VERSION"
+        #id: get_version
       
-      - uses: oleksiyrudenko/gha-git-credentials@v2.1.1
-        with:
-          global: true
-          name: '${{ secrets.GIT_COMMIT_USERNAME }}'
-          email: '${{ secrets.GIT_COMMIT_AUTHOR_EMAIL }}'
-          actor: '${{ secrets.GIT_COMMIT_USERNAME }}'
-          token: '${{ secrets.GH_TOKEN }}'
+      #- uses: oleksiyrudenko/gha-git-credentials@v2.1.1
+        #with:
+          #global: true
+          #name: '${{ secrets.GIT_COMMIT_USERNAME }}'
+          #email: '${{ secrets.GIT_COMMIT_AUTHOR_EMAIL }}'
+          #actor: '${{ secrets.GIT_COMMIT_USERNAME }}'
+          #token: '${{ secrets.GH_TOKEN }}'
         
       #- name: Set author identity
       #  run: |
       #    git config --global user.email ${{ secrets.GIT_COMMIT_AUTHOR_EMAIL }}
       #    git config --global user.name ${{ secrets.GIT_COMMIT_USERNAME }}
           
-      - name: show release version
-        run: |
-          echo "${{ inputs.release_version }}"
-          cd secure-api-gateway-parent
-          ls -al
-          git checkout -b release/release-${{ env.VERSION }}
-          git remote -v
+      #- name: show release version
+        #run: |
+          #echo "${{ inputs.release_version }}"
+          #cd secure-api-gateway-parent
+          #ls -al
+          #git checkout -b release/release-${{ env.VERSION }}
+          #git remote -v
           # git remote set-url origin https://${{ secrets.GIT_COMMIT_USERNAME }}:${{ secrets.ACCESS_TOKEN_RELEASE }}@github.com/SecureApiGateway/secure-api-gateway-parent.git
-          git push origin release/release-${{ env.VERSION }}
+          #git push origin release/release-${{ env.VERSION }}
 
       #- name: release performance
       #  working-directory: secure-api-gateway-parent
