@@ -13,7 +13,9 @@ on:
         description: "Specific tag to build the release"
         required: false
         type: string
-
+env:
+  GH_TOKEN: ${{ github.token }}
+  
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -23,8 +25,6 @@ jobs:
       - name: Create release
         run: |
           gh release create  ${{ inputs.tag }} -t "Release ${{ inputs.tag }}" -d --generate-notes # generate a release draft from input tag
-        env:
-          GH_TOKEN: ${{ github.token }}
           
       #- name: checkout secure-api-gateway-parent
         #uses: actions/checkout@v3
