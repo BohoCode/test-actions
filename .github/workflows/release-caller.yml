@@ -40,7 +40,7 @@ jobs:
 
   call-release-from-tag:
     if: ${{ inputs.from_tag }}
-    uses: ./.github/workflows/release-from-master.yml
+    uses: ./.github/workflows/release-from-tag.yml
     with:
       tag: ${{ inputs.tag }}
 
