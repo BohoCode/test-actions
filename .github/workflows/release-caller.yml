@@ -28,9 +28,10 @@ jobs:
     runs-on: ubuntu-latest
     name: show inputs
     steps:
-      run: |
-        echo "from tag: ${{ inputs.from_tag }}"
-        echo "Tag: $${{ inputs.tag }}
+      - name: show tag
+        run: |
+          echo "from tag: ${{ inputs.from_tag }}"
+          echo "Tag: $${{ inputs.tag }}
 
   call-release-from-master:
     if: ${{ !inputs.from_tag }}
