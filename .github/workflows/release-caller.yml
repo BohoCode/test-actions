@@ -24,13 +24,22 @@ env:
   GH_TOKEN: ${{ github.token }}
 
 jobs:
+  show-inputs:
+    runs-on: ubuntu-latest
+    name: show inputs
+    steps:
+      run: |
+        echo "from tag: ${{ inputs.from_tag }}"
+        echo "Tag: $${{ inputs.tag }}
+
   call-release-from-master:
-    uses: ./.github/workflows/release-from-master.yml
     if: ${{ !inputs.from_tag }}
+    uses: ./.github/workflows/release-from-master.yml
+
 
   call-release-from-tag:
-    uses: ./.github/workflows/release-from-master.yml
     if: ${{ inputs.from_tag }}
+    uses: ./.github/workflows/release-from-master.yml
     with:
       tag: ${{ inputs.tag }}
 
