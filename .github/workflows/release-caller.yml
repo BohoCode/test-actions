@@ -43,7 +43,8 @@ jobs:
         architecture: x64
         cache: 'maven'
 
-    - run: |
+    - name: show data
+      run: |
         ls -al
         git branch -l
 
