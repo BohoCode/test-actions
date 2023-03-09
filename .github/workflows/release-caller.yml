@@ -35,16 +35,19 @@ jobs:
       tag: ${{ inputs.tag }}
 
   prepare:
-    - uses: actions/setup-java@v3
-      name: set java and maven cache
-      with:
-        distribution: 'adopt'
-        java-version: '14'
-        architecture: x64
-        cache: 'maven'
+    runs-on: ubuntu-latest
+    name: release
+    steps:
+      - uses: actions/setup-java@v3
+        name: set java and maven cache
+        with:
+          distribution: 'adopt'
+          java-version: '14'
+          architecture: x64
+          cache: 'maven'
 
-    - name: show data
-      run: |
-        ls -al
-        git branch -l
+      - name: show data
+        run: |
+          ls -al
+          git branch -l
 
