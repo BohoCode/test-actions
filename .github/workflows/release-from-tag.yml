@@ -1,7 +1,7 @@
 on:
   workflow_call:
     inputs:
-      from-tag:
+      tag:
         required: true
         type: string
 
