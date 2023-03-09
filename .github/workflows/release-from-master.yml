@@ -1,9 +1,5 @@
 on:
   workflow_call:
-    inputs:
-      from_tag:
-        required: true
-        type: string
 
 jobs:
   release_tag:
