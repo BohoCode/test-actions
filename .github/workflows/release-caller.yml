@@ -1,0 +1,49 @@
+name: Release test actions
+# **What it does**: Build the maven project as release version and publish the artifact in forgerock maven repo
+# **Artifacts**: parent Project Object Model (super POM)
+# **Artifact repository**: https://maven.forgerock.org/artifactory/community/com/forgerock/sapi/gateway/
+on:
+  workflow_dispatch:
+    inputs:
+      from_tag:
+        description: "conditional to create the release from the tag provided"
+        required: false
+        type: boolean
+        default: false
+      tag:
+        description: "Specific tag to build the release, required if from tag is true"
+        required: false
+        type: string
+        default: "NO-TAG"
+      notes:
+        description: "Release notes"
+        required: false
+        type: string
+        default: ""
+env:
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  call-release-from-master:
+    uses: ./.github/workflows/release-from-master.yml
+    if: ${{ !inputs.from_tag }}
+
+  call-release-from-tag:
+    uses: ./.github/workflows/release-from-master.yml
+    if: ${{ inputs.from_tag }}
+    with:
+      tag: ${{ inputs.tag }}
+
+  prepare:
+    - uses: actions/setup-java@v3
+      name: set java and maven cache
+      with:
+        distribution: 'adopt'
+        java-version: '14'
+        architecture: x64
+        cache: 'maven'
+
+    - run: |
+        ls -al
+        git branch -l
+

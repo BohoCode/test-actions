@@ -27,3 +27,23 @@ git rebase -i ${commit-hash}
 git rebase -i HEAD~N
 ```
 >Where N is the number of commits you want to join, starting from the most recent one
+
+## Create release
+```shell
+git checkout -b release/1.0.0
+mvn versions:set -DremoveSnapshot
+mvn versions:set-property -Dproperty=maven-release-plugin.version,git-changelog-maven-plugin.version -DnewVersion=8.0.0 
+# Update dependencies manually
+mvn clean package # to test the integrity of the project
+git add .
+git commit -m "Release candidate ...."
+git push
+git tag rc1.0.0 # release candidate
+git push origin rc1.0.0 # to push the tag to github
+# run the release github action workflow
+mvn versions:set -DnextSnapshot # update the version release to development iteration
+git add .
+git commit -m "....."
+git push # to push the latest changes to the release branch
+# Create the proper PR to merge the release branch into master 
+```

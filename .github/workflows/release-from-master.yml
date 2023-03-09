@@ -1,0 +1,14 @@
+on:
+  workflow_call:
+    inputs:
+      from-tag:
+        required: true
+        type: string
+
+jobs:
+  release_tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        name: checkout master
+        id: checkout
