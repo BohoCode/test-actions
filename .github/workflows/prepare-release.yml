@@ -78,8 +78,8 @@ jobs:
             echo "release_tag=${{ env.VERSION }}-rc.${{ inputs.candidate-number }}" >> $GITHUB_ENV
             echo "release_tag=${{ env.VERSION }}-rc.${{ inputs.candidate-number }}" >> $GITHUB_OUTPUT
           fi
-          echo "release_branch=release/${{ env.release_tag_version }}" >> $GITHUB_ENV
-          echo "release_branch=release/${{ env.release_tag_version }}" >> $GITHUB_OUTPUT
+          echo "release_branch=release/${{ env.release_tag }}" >> $GITHUB_ENV
+          echo "release_branch=release/${{ env.release_tag }}" >> $GITHUB_OUTPUT
 
       - name: create release
         run: |          
