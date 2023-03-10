@@ -9,6 +9,12 @@ on:
       set-property-command:
         required: false
         type: string
+env:
+  GIT_AUTHOR_NAME: ${{ secrets.GIT_COMMIT_USERNAME }}
+  GIT_AUTHOR_EMAIL: ${{ secrets.GIT_COMMIT_AUTHOR_EMAIL }}
+  GIT_COMMITTER_NAME: ${{ secrets.GIT_COMMIT_USERNAME }}
+  GIT_COMMITTER_EMAIL: ${{ secrets.GIT_COMMIT_AUTHOR_EMAIL }}
+
 jobs:
   release_master:
     runs-on: ubuntu-latest
@@ -31,6 +37,19 @@ jobs:
           echo "VERSION=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )" >> $GITHUB_ENV
           echo "Version is: ${{ env.VERSION }}"
 
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v5
+        with:
+          gpg_private_key: ${{ secrets.BOT_GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.BOT_GPG_KEY_PASSPHRASE }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+
+      #- name: set git config
+      #  run: |
+      #    git config user.email ${{ secrets.GIT_COMMIT_AUTHOR_EMAIL }}
+      #    git config user.name ${{ secrets.GIT_COMMIT_USERNAME }}
+
       - name: create release branch
         run: |
           echo "Version is: ${{ env.VERSION }}"
@@ -49,8 +68,6 @@ jobs:
           ls -al
           cat pom.xml
           mvn versions:commit # accepts the changes and removes the backup of the pom 
-          git config user.email ${{ secrets.GIT_COMMIT_AUTHOR_EMAIL }}
-          git config user.name ${{ secrets.GIT_COMMIT_USERNAME }}
           git add .
           git commit -m "Release ${{ env.VERSION }} branch ready"
           git push origin release/${{ env.VERSION }}
