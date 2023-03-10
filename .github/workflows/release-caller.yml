@@ -53,6 +53,7 @@ jobs:
     runs-on: ubuntu-latest
     name: show inputs
     needs: check-inputs
+    if: success()
     steps:
       - name: show inputs
         run: |
