@@ -15,7 +15,7 @@ jobs:
 
       - name: remove project snapshot
         run: |
-          mvn version:set -DremoveSnapshot -DgenerateBackupPoms
+          mvn versions:set -DremoveSnapshot -DgenerateBackupPoms
 
       - name: Release version
         run: |
