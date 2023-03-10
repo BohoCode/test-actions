@@ -14,7 +14,6 @@ on:
         description: "Provide the tag (required if from_tag is true)"
         required: false
         type: string
-        default: "PROVIDE-THE-TAG-VALUE"
       notes:
         description: "Release notes"
         required: false
@@ -38,6 +37,18 @@ env:
   GIT_COMMITTER_EMAIL: ${{ secrets.GIT_COMMIT_AUTHOR_EMAIL }}
 
 jobs:
+  check-inputs:
+    runs-on: ubuntu-latest
+    name: check inputs integrity
+    steps:
+      - name: check inputs
+        run: |
+          if [ ${{ inputs.from_tag }} ]; then
+            if [ ! -n ${{ inputs.tag }} ]; then
+              echo "The tag value is mandatory when from tag is set as true"
+              exit 1 
+            fi
+          fi
   show-inputs:
     runs-on: ubuntu-latest
     name: show inputs
