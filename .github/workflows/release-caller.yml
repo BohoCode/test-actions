@@ -57,7 +57,7 @@ jobs:
         run: |
           echo "from_tag: ${{ inputs.from_tag }}"
           echo "tag: ${{ inputs.tag }}"
-          echo "notes: ${{ inputs. }}"
+          echo "notes: ${{ inputs.notes }}"
           echo "is-final-release: ${{ inputs.is-final-release }}"
           echo "candidate-number: ${{ inputs.candidate-number }}"
 
