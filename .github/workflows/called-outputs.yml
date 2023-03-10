@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     # Map the job outputs to step outputs
     outputs:
-      output1: ${{ steps.create-context.outputs.release_ref }}
+      release_ref: ${{ steps.create-context.outputs.release_ref }}
     steps:
       - name: get version
         run: |

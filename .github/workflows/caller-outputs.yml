@@ -9,7 +9,7 @@ jobs:
   called:
     uses: ./.github/workflows/called-outputs.yml
   other:
+    runs-on: ubuntu-latest
     needs: called
     steps:
-      run: |
-        echo ${{ needs.called.outputs.release_ref }}
+      - run: echo ${{ needs.called.outputs.release_ref }}
