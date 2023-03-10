@@ -59,12 +59,15 @@ jobs:
       - name: Create release branch semver
         id: create-release
         run: |
+          ls -al
           echo "VERSION=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )" >> $GITHUB_ENV
           echo "Version is: ${{ env.VERSION }}"
-          if ${{ inputs.is-final-release }}; then 
+          if ${{ inputs.is-final-release }}; then
+            echo "is a final release"
             echo "release_tag=${{ env.VERSION }}" >> $GITHUB_ENV
             echo "release_tag=${{ env.VERSION }}" >> $GITHUB_OUTPUT
           else
+            echo "is not a final release"
             echo "release_tag=${{ env.VERSION }}-rc.${{ inputs.candidate-number }}" >> $GITHUB_ENV
             echo "release_tag=${{ env.VERSION }}-rc.${{ inputs.candidate-number }}" >> $GITHUB_OUTPUT
           fi
