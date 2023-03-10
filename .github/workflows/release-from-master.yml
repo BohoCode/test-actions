@@ -4,11 +4,39 @@ on:
       set-property-command:
         required: false
         type: string
+      is-final-release:
+        required: false
+        type: boolean
+        default: false
+      candidate-number:
+        required: false
+        type: string
+        default: 1
+    outputs:
+      RELEASE_TAG_VERSION:
+        description: "release tag created"
+        value: ${{ jobs.release_master.outputs.release_tag_version }}
+
   workflow_dispatch:
     inputs:
       set-property-command:
         required: false
         type: string
+      is-final-release:
+        required: false
+        type: boolean
+        default: true
+      candidate-number:
+        required: false
+        type: string
+        default: 1
+      outputs:
+        release_tag:
+          description: "release tag created"
+          value: ${{ jobs.release_master.outputs.release_tag }}
+        release_branch:
+          description: "release branch created"
+          value: ${{ jobs.release_master.outputs.release_branch }}
 env:
   GIT_AUTHOR_NAME: ${{ secrets.GIT_COMMIT_USERNAME }}
   GIT_AUTHOR_EMAIL: ${{ secrets.GIT_COMMIT_AUTHOR_EMAIL }}
@@ -17,26 +45,20 @@ env:
 
 jobs:
   release_master:
+    name: prepare release
+    # Map the job outputs to step outputs
+    outputs:
+      release_tag: ${{ steps.create-release.outputs.release_tag }}
+      release_branch: ${{ steps.create-release.outputs.release_branch }}
+
     runs-on: ubuntu-latest
     steps:
+      # https://github.com/actions/checkout
       - uses: actions/checkout@v3
         name: checkout master
-        id: checkout
-        #with:
-          #path: secure-api-gateway-parent
 
-      - name: remove project snapshot
-        run: |
-          ls -al
-          mvn help:evaluate -Dexpression=project.version -q -DforceStdout
-          mvn versions:set -DremoveSnapshot -DgenerateBackupPoms # remove snapshot and creates a backup of the poms
-
-      - name: Release version
-        run: |
-          ls -al
-          echo "VERSION=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )" >> $GITHUB_ENV
-          echo "Version is: ${{ env.VERSION }}"
-
+      # https://github.com/crazy-max/ghaction-import-gpg
+      # https://httgp.com/signing-commits-in-github-actions/
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v5
         with:
@@ -45,29 +67,42 @@ jobs:
           git_user_signingkey: true
           git_commit_gpgsign: true
 
-      #- name: set git config
-      #  run: |
-      #    git config user.email ${{ secrets.GIT_COMMIT_AUTHOR_EMAIL }}
-      #    git config user.name ${{ secrets.GIT_COMMIT_USERNAME }}
-
-      - name: create release branch
+      # https://semver.org/
+      - name: Create release branch semver
+        id: create-release
         run: |
-          echo "Version is: ${{ env.VERSION }}"
-          git checkout -b release/${{ env.VERSION }}
-          ls -al
-          cat pom.xml
-          git branch -l
+          echo "VERSION=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )" >> $GITHUB_ENV
+          if [ ${{ inputs.is-final-release }} ]; then 
+            echo "release_tag=${{ env.VERSION }}" >> $GITHUB_ENV
+            echo "release_tag=${{ env.VERSION }}" >> $GITHUB_OUTPUT
+          else
+            echo "release_tag=${{ env.VERSION }}-rc.${{ inputs.candidate-number }}" >> $GITHUB_ENV
+            echo "release_tag=${{ env.VERSION }}-rc.${{ inputs.candidate-number }}" >> $GITHUB_OUTPUT
+          fi
+          echo "release_branch=release/${{ env.release_tag_version }}" >> $GITHUB_ENV
+          echo "release_branch=release/${{ env.release_tag_version }}" >> $GITHUB_OUTPUT
+          echo "Release is: ${{ env.release_tag }}"
+          git checkout -b ${{ env.release_branch }}
 
-      - name: update dependencies
+      - name: Remove snapshot versions
+        run: |
+          mvn versions:set -DremoveSnapshot -DgenerateBackupPoms # remove snapshot and creates a backup of the poms
+
+      - name: Update dependencies
         run: |
           echo "Command to execute: ${{ inputs.set-property-command }}"
           ${{ inputs.set-property-command }}
 
-      - name: Check release branch
+      - name: Push release branch
         run: |
-          ls -al
-          cat pom.xml
           mvn versions:commit # accepts the changes and removes the backup of the pom 
           git add .
-          git commit -m "Release ${{ env.VERSION }} branch ready"
-          git push origin release/${{ env.VERSION }}
+          git commit -m "Release ${{ env.release_tag }} branch ready"
+          git push origin ${{ env.release_branch }}
+
+      - name: create release tag
+        id: release-tag
+        if: ${{ inputs.is-candidate }}
+        run: |
+          git tag ${{ env.release_tag }}
+          git push origin ${{ env.release_tag }}
