@@ -55,6 +55,10 @@ jobs:
           git_user_signingkey: true
           git_commit_gpgsign: true
 
+      - name: Remove snapshot versions
+        run: |
+          mvn versions:set -DremoveSnapshot -DgenerateBackupPoms # remove snapshot and creates a backup of the poms
+
       # https://semver.org/
       - name: Create release branch semver
         id: create-release
@@ -75,10 +79,6 @@ jobs:
           echo "release_branch=release/${{ env.release_tag_version }}" >> $GITHUB_OUTPUT
           echo "Release is: ${{ env.release_tag }}"
           git checkout -b ${{ env.release_branch }}
-
-      - name: Remove snapshot versions
-        run: |
-          mvn versions:set -DremoveSnapshot -DgenerateBackupPoms # remove snapshot and creates a backup of the poms
 
       - name: Update dependencies
         run: |
