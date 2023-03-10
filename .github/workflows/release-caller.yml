@@ -1,4 +1,4 @@
-name: Release test actions
+name: Start release
 # **What it does**: Build the maven project as release version and publish the artifact in forgerock maven repo
 # **Artifacts**: parent Project Object Model (super POM)
 # **Artifact repository**: https://maven.forgerock.org/artifactory/community/com/forgerock/sapi/gateway/

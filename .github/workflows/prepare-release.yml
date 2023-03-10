@@ -1,3 +1,4 @@
+name: prepare release
 on:
   workflow_call:
     inputs:
