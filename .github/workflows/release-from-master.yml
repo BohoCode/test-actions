@@ -23,7 +23,7 @@ jobs:
         run: |
           ls -al
           mvn help:evaluate -Dexpression=project.version -q -DforceStdout
-          mvn versions:set -DremoveSnapshot -DgenerateBackupPoms
+          mvn versions:set -DremoveSnapshot -DgenerateBackupPoms # remove snapshot and creates a backup of the poms
 
       - name: Release version
         run: |
@@ -43,3 +43,12 @@ jobs:
         run: |
           echo "Command to execute: ${{ inputs.set-property-command }}"
           ${{ inputs.set-property-command }}
+
+      - name: Check release branch
+        run: |
+          ls -al
+          cat pom.xml
+          mvn versions:commit # accepts the changes and removes the backup of the pom 
+          git add .
+          git commit -m "Release ${{ env.VERSION }} branch ready"
+          git push
