@@ -5,15 +5,11 @@ name: Release test actions
 on:
   workflow_dispatch:
     inputs:
-      from_tag:
-        description: "from_tag: Should create the release from a tag?"
-        required: false
-        type: boolean
-        default: false
       tag:
-        description: "Provide the tag (required if from_tag is true)"
+        description: "Provide the tag if you want create the release from existing tag"
         required: false
         type: string
+        default: ""
       notes:
         description: "Release notes"
         required: false
@@ -37,23 +33,9 @@ env:
   GIT_COMMITTER_EMAIL: ${{ secrets.GIT_COMMIT_AUTHOR_EMAIL }}
 
 jobs:
-  check-inputs:
-    runs-on: ubuntu-latest
-    name: check inputs integrity
-    steps:
-      - name: check inputs
-        run: |
-          if [ ${{ inputs.from_tag }} ]; then
-            if [ ! -n ${{ inputs.tag }} ]; then
-              echo "The tag value is mandatory when from tag is set as true"
-              exit 1 
-            fi
-          fi
   show-inputs:
     runs-on: ubuntu-latest
     name: show inputs
-    needs: check-inputs
-    if: success()
     steps:
       - name: show inputs
         run: |
@@ -63,27 +45,19 @@ jobs:
           echo "is-final-release: ${{ inputs.is-final-release }}"
           echo "candidate-number: ${{ inputs.candidate-number }}"
 
-  call-release-from-master:
+  prepare-release:
     needs: show-inputs
-    if: ${{ !inputs.from_tag }}
-    uses: ./.github/workflows/release-from-master.yml
+    uses: ./.github/workflows/prepare-release.yml
     with:
+      tag: ${{ inputs.tag }}
       is-final-release: ${{ inputs.is-final-release }}
       candidate-number: ${{ inputs.candidate-number }}
       set-property-command: "mvn versions:set-property -Dproperty=property.test.version -DnewVersion=8.0.0"
 
-
-  call-release-from-tag:
-    needs: show-inputs
-    if: ${{ inputs.from_tag }}
-    uses: ./.github/workflows/release-from-tag.yml
-    with:
-      tag: ${{ inputs.tag }}
-
-  prepare:
+  build-release:
     runs-on: ubuntu-latest
     name: release
-    needs: call-release-from-master
+    needs: prepare-release
     steps:
       - name: prepare variables
         run: |
