@@ -53,4 +53,4 @@ jobs:
           git config user.name ${{ secrets.GIT_COMMIT_USERNAME }}
           git add .
           git commit -m "Release ${{ env.VERSION }} branch ready"
-          git push
+          git push origin release/${{ env.VERSION }}
