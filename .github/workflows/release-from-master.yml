@@ -13,9 +13,12 @@ on:
         type: string
         default: 1
     outputs:
-      RELEASE_TAG_VERSION:
+      release_tag:
         description: "release tag created"
-        value: ${{ jobs.release_master.outputs.release_tag_version }}
+        value: ${{ jobs.release_master.outputs.release_tag }}
+      release_branch:
+        description: "release branch created"
+        value: ${{ jobs.release_master.outputs.release_branch }}
 
   workflow_dispatch:
     inputs:
