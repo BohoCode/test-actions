@@ -89,7 +89,7 @@ jobs:
       - name: checkout branch
         if: ${{ inputs.tag }} == '' && ${{ env.release_ref }} != ''
         run: |
-          # git fetch --all
+          git fetch --all
           git checkout origin/${{ env.release_ref }}
 
       - uses: actions/setup-java@v3
