@@ -52,6 +52,7 @@ jobs:
   show-inputs:
     runs-on: ubuntu-latest
     name: show inputs
+    needs: check-inputs
     steps:
       - name: show inputs
         run: |
