@@ -59,12 +59,15 @@ jobs:
         run: |
           mvn versions:set -DremoveSnapshot -DgenerateBackupPoms # remove snapshot and creates a backup of the poms
 
+      - name:
+        run: |
+          ls -al
+          echo "VERSION=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )" >> $GITHUB_ENV
+
       # https://semver.org/
       - name: Create release branch semver
         id: create-release
         run: |
-          ls -al
-          echo "VERSION=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )" >> $GITHUB_ENV
           echo "Version is: ${{ env.VERSION }}"
           if ${{ inputs.is-final-release }}; then
             echo "is a final release"
