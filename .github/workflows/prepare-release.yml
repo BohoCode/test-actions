@@ -80,10 +80,13 @@ jobs:
           fi
           echo "release_branch=release/${{ env.release_tag }}" >> $GITHUB_ENV
           echo "release_branch=release/${{ env.release_tag }}" >> $GITHUB_OUTPUT
+          echo "Release tag: ${{ env.release_tag }}"
+          echo "Release branch: ${{ env.release_branch }}"
 
       - name: create release
         run: |          
-          echo "Release is: ${{ env.release_tag }}"
+          echo "Release tag: ${{ env.release_tag }}"
+          echo "Release branch: ${{ env.release_branch }}"
           git checkout -b ${{ env.release_branch }}
 
       - name: Update dependencies
