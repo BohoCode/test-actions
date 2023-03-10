@@ -6,25 +6,27 @@ on:
   workflow_dispatch:
     inputs:
       from_tag:
-        description: "conditional to create the release from the tag provided"
+        description: "from_tag: Should create the release from a tag?"
         required: false
         type: boolean
         default: false
       tag:
-        description: "Specific tag to build the release, required if from tag is true"
+        description: "Provide the tag (required if from_tag is true)"
         required: false
         type: string
-        default: "NO-TAG"
+        default: "PROVIDE-THE-TAG-VALUE"
       notes:
         description: "Release notes"
         required: false
         type: string
         default: ""
       is-final-release:
+        description: "Is a final release, otherwise will be a 'rc' (release candidate)"
         required: false
         type: boolean
         default: false
       candidate-number:
+        description: "Provide the candidate sequence number (default: 1)"
         required: false
         type: string
         default: 1
