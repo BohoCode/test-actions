@@ -49,6 +49,8 @@ jobs:
           ls -al
           cat pom.xml
           mvn versions:commit # accepts the changes and removes the backup of the pom 
+          git config user.email ${{ secrets.GIT_COMMIT_AUTHOR_EMAIL }}
+          git config user.name ${{ secrets.GIT_COMMIT_USERNAME }}
           git add .
           git commit -m "Release ${{ env.VERSION }} branch ready"
           git push
