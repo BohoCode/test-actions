@@ -124,4 +124,4 @@ jobs:
 
       - name: create pull request
         run: |
-          gh pr create -B master --title "Release created" --body "Next development iteration ready"
+          gh pr create -B master --title "Release ${{ env.release_ref }} created" --body "Next development iteration ready"
