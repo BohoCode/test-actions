@@ -77,11 +77,11 @@ jobs:
           echo "Version is: ${{ env.VERSION }}"
           if ${{ inputs.is-final-release }}; then
             echo "is a final release"
-#            echo "release_ref=${{ env.VERSION }}" >> $GITHUB_ENV
+            # echo "release_ref=${{ env.VERSION }}" >> $GITHUB_ENV
             echo "release_ref=${{ env.VERSION }}" >> $GITHUB_OUTPUT
           else
             echo "is not a final release"
-#            echo "release_ref=${{ env.VERSION }}-rc.${{ inputs.candidate-number }}" >> $GITHUB_ENV
+            # echo "release_ref=${{ env.VERSION }}-rc.${{ inputs.candidate-number }}" >> $GITHUB_ENV
             echo "release_ref=${{ env.VERSION }}-rc.${{ inputs.candidate-number }}" >> $GITHUB_OUTPUT
           fi
 
