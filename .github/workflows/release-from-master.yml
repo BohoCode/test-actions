@@ -4,7 +4,11 @@ on:
       set-property-command:
         required: false
         type: string
-
+  workflow_dispatch:
+    inputs:
+      set-property-command:
+        required: false
+        type: string
 jobs:
   release_master:
     runs-on: ubuntu-latest
