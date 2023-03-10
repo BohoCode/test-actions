@@ -53,6 +53,7 @@ jobs:
       is-final-release: ${{ inputs.is-final-release }}
       candidate-number: ${{ inputs.candidate-number }}
       set-property-command: "mvn versions:set-property -Dproperty=property.test.version -DnewVersion=8.0.0"
+    secrets: inherit
 
   build-release:
     runs-on: ubuntu-latest
