@@ -36,6 +36,8 @@ jobs:
   call-release-from-master:
     if: ${{ !inputs.from_tag }}
     uses: ./.github/workflows/release-from-master.yml
+    with:
+      set-property-command: "mvn versions:set-property -Dproperty=property.test.version -DnewVersion=8.0.0"
 
 
   call-release-from-tag:

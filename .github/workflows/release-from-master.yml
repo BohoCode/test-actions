@@ -1,5 +1,9 @@
 on:
   workflow_call:
+    inputs:
+      set-property-command:
+        required: false
+        type: string
 
 jobs:
   release_master:
@@ -8,3 +12,23 @@ jobs:
       - uses: actions/checkout@v3
         name: checkout master
         id: checkout
+
+      - name: remove project snapshot
+        run: |
+          mvn version:set -DremoveSnapshot -DgenerateBackupPoms
+
+      - name: Release version
+        run: |
+          echo "VERSION=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )" >> $GITHUB_ENV
+          echo "Version is: ${{ env.VERSION }}
+
+      - name: create release branch
+        run: |
+          git checkout -b release/${{ env.VERSION }}
+          ls -al
+          cat pom.xml
+
+      - name: update dependencies
+        run: |
+          echo "Command to execute: ${{ inputs.set-property-command }}"
+          ${{ inputs.set-property-command }}
