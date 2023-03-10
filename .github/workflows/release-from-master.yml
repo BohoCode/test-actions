@@ -29,11 +29,11 @@ jobs:
         run: |
           ls -al
           echo "VERSION=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )" >> $GITHUB_ENV
-          echo "Version is: ${{ env.VERSION }}
+          echo "Version is: ${{ env.VERSION }}"
 
       - name: create release branch
         run: |
-          echo "Version is: ${{ env.VERSION }}
+          echo "Version is: ${{ env.VERSION }}"
           git checkout -b release/${{ env.VERSION }}
           ls -al
           cat pom.xml
