@@ -39,7 +39,6 @@ jobs:
     steps:
       - name: show inputs
         run: |
-          echo "from_tag: ${{ inputs.from_tag }}"
           echo "tag: ${{ inputs.tag }}"
           echo "notes: ${{ inputs.notes }}"
           echo "is-final-release: ${{ inputs.is-final-release }}"
