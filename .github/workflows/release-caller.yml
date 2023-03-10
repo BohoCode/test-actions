@@ -115,12 +115,12 @@ jobs:
           # Create a release from input tag
           gh release create  ${{ env.release_ref }} -t "${{ env.release_ref }}" --notes "${{ inputs.notes }}" # --generate-notes
 
-      - name: Prepare next development interation
+      - name: Prepare next development iteration
         run: |
           mvn versions:set -DnextSnapshot
           git add .
           git commit -m "Prepare the next development iteration"
-          git push origin ${{ env.release_ref }}
+          git push
 
       - name: create pull request
         run: |
