@@ -1,0 +1,24 @@
+name: Reusable workflow
+
+on:
+  workflow_call:
+    # Map the workflow outputs to job outputs
+    outputs:
+      release_ref:
+        description: "Release reference"
+        value: ${{ jobs.release_prepare.outputs.release_ref }}
+
+jobs:
+  release_prepare:
+    name: Generate output
+    runs-on: ubuntu-latest
+    # Map the job outputs to step outputs
+    outputs:
+      output1: ${{ steps.create-context.outputs.release_ref }}
+    steps:
+      - name: get version
+        run: |
+          echo "VERSION=pepito" >> $GITHUB_ENV
+      - name: create context
+        id: create-context
+        run: echo "release_ref=${{ env.VERSION }}" >> $GITHUB_OUTPUT

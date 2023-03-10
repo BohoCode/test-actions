@@ -1,0 +1,15 @@
+name: Release test actions
+# **What it does**: Build the maven project as release version and publish the artifact in forgerock maven repo
+# **Artifacts**: parent Project Object Model (super POM)
+# **Artifact repository**: https://maven.forgerock.org/artifactory/community/com/forgerock/sapi/gateway/
+on:
+  workflow_dispatch:
+
+jobs:
+  called:
+    uses: ./.github/workflows/called-outputs.yml
+  other:
+    needs: called
+    steps:
+      run: |
+        echo ${{ needs.called.outputs.release_ref }}
