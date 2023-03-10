@@ -45,6 +45,7 @@ jobs:
 #          echo "candidate-number: ${{ inputs.candidate-number }}"
 
   prepare-release:
+    name: prepare release
 #    needs: show-inputs
     uses: ./.github/workflows/prepare-release.yml
     with:
@@ -56,7 +57,7 @@ jobs:
 
   build-release:
     runs-on: ubuntu-latest
-    name: release
+    name: build and publish release
     needs: prepare-release
     steps:
       - name: prepare context

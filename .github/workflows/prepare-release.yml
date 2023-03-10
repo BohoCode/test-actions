@@ -36,7 +36,6 @@ env:
 
 jobs:
   release_prepare:
-    name: prepare release
     runs-on: ubuntu-latest
     # Map the job outputs to step outputs
     outputs:
