@@ -63,6 +63,7 @@ jobs:
           echo "candidate-number: ${{ inputs.candidate-number }}"
 
   call-release-from-master:
+    needs: show-inputs
     if: ${{ !inputs.from_tag }}
     uses: ./.github/workflows/release-from-master.yml
     with:
@@ -72,6 +73,7 @@ jobs:
 
 
   call-release-from-tag:
+    needs: show-inputs
     if: ${{ inputs.from_tag }}
     uses: ./.github/workflows/release-from-tag.yml
     with:
