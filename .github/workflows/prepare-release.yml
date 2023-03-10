@@ -65,8 +65,8 @@ jobs:
           echo "VERSION=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )" >> $GITHUB_ENV
 
       # https://semver.org/
-      - name: Create release branch semver
-        id: create-release
+      - name: Create semver versions
+        id: create-versions
         run: |
           echo "Version is: ${{ env.VERSION }}"
           if ${{ inputs.is-final-release }}; then
@@ -80,6 +80,9 @@ jobs:
           fi
           echo "release_branch=release/${{ env.release_tag_version }}" >> $GITHUB_ENV
           echo "release_branch=release/${{ env.release_tag_version }}" >> $GITHUB_OUTPUT
+
+      - name: create release
+        run: |          
           echo "Release is: ${{ env.release_tag }}"
           git checkout -b ${{ env.release_branch }}
 
