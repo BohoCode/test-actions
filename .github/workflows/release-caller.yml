@@ -59,19 +59,15 @@ jobs:
     name: release
     needs: prepare-release
     steps:
-      - name: prepare variables
+      - name: prepare context
         run: |
-          if [ ${{ !inputs.from_tag }} ]; then
-            echo "release_tag=${{ needs.call-release-from-master.outputs.release_tag }}" >> $GITHUB_ENV
-            echo "release_branch=${{ needs.call-release-from-master.outputs.release_branch }}" >> $GITHUB_ENV
-          else
-            echo "release_tag=${{ needs.call-release-from-tag.outputs.release_tag }}" >> $GITHUB_ENV
-            echo "release_branch=${{ needs.call-release-from-tag.outputs.release_branch }}" >> $GITHUB_ENV
-          fi
-      - name: show variables
-        run: |
-          echo "release_tag: ${{ env.release_tag }}"
-          echo "release_branch: ${{ env.release_branch }}"
+          echo "release ref: ${{ needs.prepare-release.outputs.release_ref }}"
+          echo "release_ref=${{ needs.prepare-release.outputs.release_ref }}" >> $GITHUB_ENV
+
+#      - name: show variables
+#        run: |
+#          echo "release_tag: ${{ env.release_tag }}"
+#          echo "release_branch: ${{ env.release_branch }}"
 
       # https://github.com/actions/checkout
       - uses: actions/checkout@v3
@@ -89,7 +85,7 @@ jobs:
 
       - name: checkout branch
         run: |
-          git checkout ${{ env.release_tag }}
+          git checkout ${{ env.release_ref }}
 
       - uses: actions/setup-java@v3
         name: set java and maven cache
@@ -104,3 +100,19 @@ jobs:
           ls -al
           git branch -l
 
+      - name: deploy release
+        run: |
+          mvn clean deploy -DaltDeploymentRepository=release::default::"https://${{ secrets.FR_ARTIFACTORY_USER }}:${{ secrets.FR_ARTIFACTORY_TOKEN }}@maven.forgerock.org/artifactory/community/"
+
+      - name: Create github release
+        if: success()
+        run: |
+          # Create a release from input tag
+          gh release create  ${{ env.release_ref }} -t "${{ env.release_ref }}" --notes "${{ inputs.notes }}" # --generate-notes
+
+      - name: Prepare next development interation
+        run: |
+          mvn versions:set -DnextSnapshot
+          git add .
+          git commit -m "Prepare the next development iteration"
+          git push origin ${{ env.release_ref }}
