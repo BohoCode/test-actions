@@ -33,13 +33,13 @@ on:
         required: false
         type: string
         default: 1
-      outputs:
-        release_tag:
-          description: "release tag created"
-          value: ${{ jobs.release_master.outputs.release_tag }}
-        release_branch:
-          description: "release branch created"
-          value: ${{ jobs.release_master.outputs.release_branch }}
+    outputs:
+      release_tag:
+        description: "release tag created"
+        value: ${{ jobs.release_master.outputs.release_tag }}
+      release_branch:
+        description: "release branch created"
+        value: ${{ jobs.release_master.outputs.release_branch }}
 env:
   GIT_AUTHOR_NAME: ${{ secrets.GIT_COMMIT_USERNAME }}
   GIT_AUTHOR_EMAIL: ${{ secrets.GIT_COMMIT_AUTHOR_EMAIL }}
