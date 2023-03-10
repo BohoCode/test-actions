@@ -33,19 +33,19 @@ env:
   GIT_COMMITTER_EMAIL: ${{ secrets.GIT_COMMIT_AUTHOR_EMAIL }}
 
 jobs:
-  show-inputs:
-    runs-on: ubuntu-latest
-    name: show inputs
-    steps:
-      - name: show inputs
-        run: |
-          echo "tag: ${{ inputs.tag }}"
-          echo "notes: ${{ inputs.notes }}"
-          echo "is-final-release: ${{ inputs.is-final-release }}"
-          echo "candidate-number: ${{ inputs.candidate-number }}"
+#  show-inputs:
+#    runs-on: ubuntu-latest
+#    name: show inputs
+#    steps:
+#      - name: show inputs
+#        run: |
+#          echo "tag: ${{ inputs.tag }}"
+#          echo "notes: ${{ inputs.notes }}"
+#          echo "is-final-release: ${{ inputs.is-final-release }}"
+#          echo "candidate-number: ${{ inputs.candidate-number }}"
 
   prepare-release:
-    needs: show-inputs
+#    needs: show-inputs
     uses: ./.github/workflows/prepare-release.yml
     with:
       tag: ${{ inputs.tag }}
