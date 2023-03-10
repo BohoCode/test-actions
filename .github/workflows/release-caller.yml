@@ -73,6 +73,8 @@ jobs:
       # https://github.com/actions/checkout
       - uses: actions/checkout@v3
         name: checkout master
+        with:
+          ref ${{ inputs.tag }} # if tag is empty uses the default branch
 
       # https://github.com/crazy-max/ghaction-import-gpg
       # https://httgp.com/signing-commits-in-github-actions/
@@ -85,7 +87,9 @@ jobs:
           git_commit_gpgsign: true
 
       - name: checkout branch
+        if: ${{ inputs.tag }} == '' && ${{ env.release_ref }} != ''
         run: |
+          git fetch --all
           git checkout ${{ env.release_ref }}
 
       - uses: actions/setup-java@v3
