@@ -117,10 +117,11 @@ jobs:
 
       - name: Prepare next development iteration
         run: |
+          git branch -l
           mvn versions:set -DnextSnapshot
           git add .
           git commit -m "Prepare the next development iteration"
-          git push
+          git push origin HEAD:${{ env.release_ref }}
 
       - name: create pull request
         run: |
