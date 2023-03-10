@@ -9,12 +9,12 @@ on:
         description: "Provide the tag if you want create the release from existing tag"
         required: false
         type: string
-        default: ""
+        default: ''
       notes:
         description: "Release notes"
         required: false
         type: string
-        default: ""
+        default: ''
       is-final-release:
         description: "Is a final release, otherwise will be a 'rc' (release candidate)"
         required: false

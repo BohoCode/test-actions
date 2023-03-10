@@ -5,9 +5,11 @@ on:
         description: "Provide the tag if you want create the release from existing tag"
         required: false
         type: string
+        default: ''
       set-property-command:
         required: false
         type: string
+        default: ''
       is-final-release:
         required: false
         type: boolean
@@ -17,12 +19,15 @@ on:
         type: string
         default: 1
     outputs:
-      release_tag:
-        description: "release tag created"
-        value: ${{ jobs.release_master.outputs.release_tag }}
-      release_branch:
-        description: "release branch created"
-        value: ${{ jobs.release_master.outputs.release_branch }}
+      release_ref:
+        description: "Release reference"
+        value: ${{ jobs.release_prepare.outputs.release_ref }}
+#      release_tag:
+#        description: "release tag created"
+#        value: ${{ jobs.release_master.outputs.release_tag }}
+#      release_branch:
+#        description: "release branch created"
+#        value: ${{ jobs.release_master.outputs.release_branch }}
 env:
   GIT_AUTHOR_NAME: ${{ secrets.GIT_COMMIT_USERNAME }}
   GIT_AUTHOR_EMAIL: ${{ secrets.GIT_COMMIT_AUTHOR_EMAIL }}
@@ -30,13 +35,14 @@ env:
   GIT_COMMITTER_EMAIL: ${{ secrets.GIT_COMMIT_AUTHOR_EMAIL }}
 
 jobs:
-  release_master:
+  release_prepare:
     name: prepare release
     runs-on: ubuntu-latest
     # Map the job outputs to step outputs
     outputs:
-      release_tag: ${{ steps.create-release.outputs.release_tag }}
-      release_branch: ${{ steps.create-release.outputs.release_branch }}
+#      release_tag: ${{ steps.create-release.outputs.release_tag }}
+#      release_branch: ${{ steps.create-release.outputs.release_branch }}
+      release_ref: ${{ steps.create-context.release_ref }}
 
     steps:
       # https://github.com/actions/checkout
@@ -55,7 +61,7 @@ jobs:
           git_user_signingkey: true
           git_commit_gpgsign: true
 
-      - name: Remove snapshot versions
+      - name: Remove snapshots suffix
         run: |
           mvn versions:set -DremoveSnapshot -DgenerateBackupPoms # remove snapshot and creates a backup of the poms
 
@@ -65,31 +71,32 @@ jobs:
           echo "VERSION=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )" >> $GITHUB_ENV
 
       # https://semver.org/
-      - name: Create semver versions
-        id: create-versions
+      - name: Create environment context
+        id: create-context
         run: |
           echo "Version is: ${{ env.VERSION }}"
           if ${{ inputs.is-final-release }}; then
             echo "is a final release"
-            echo "release_tag=${{ env.VERSION }}" >> $GITHUB_ENV
-            echo "release_tag=${{ env.VERSION }}" >> $GITHUB_OUTPUT
+#            echo "release_ref=${{ env.VERSION }}" >> $GITHUB_ENV
+            echo "release_ref=${{ env.VERSION }}" >> $GITHUB_OUTPUT
           else
             echo "is not a final release"
-            echo "release_tag=${{ env.VERSION }}-rc.${{ inputs.candidate-number }}" >> $GITHUB_ENV
-            echo "release_tag=${{ env.VERSION }}-rc.${{ inputs.candidate-number }}" >> $GITHUB_OUTPUT
+#            echo "release_ref=${{ env.VERSION }}-rc.${{ inputs.candidate-number }}" >> $GITHUB_ENV
+            echo "release_ref=${{ env.VERSION }}-rc.${{ inputs.candidate-number }}" >> $GITHUB_OUTPUT
           fi
-          echo "release_branch=release/${{ env.release_tag }}" >> $GITHUB_ENV
-          echo "release_branch=release/${{ env.release_tag }}" >> $GITHUB_OUTPUT
-          echo "Release tag: ${{ env.release_tag }}"
-          echo "Release branch: ${{ env.release_branch }}"
 
-      - name: create release
+#      - name: Create branch context
+#        run: |
+#          echo "release_branch=release/${{ env.release_tag }}" >> $GITHUB_ENV
+#          echo "release_branch=release/${{ env.release_tag }}" >> $GITHUB_OUTPUT
+
+      - name: create release branch
         run: |          
-          echo "Release tag: ${{ env.release_tag }}"
-          echo "Release branch: ${{ env.release_branch }}"
-          git checkout -b ${{ env.release_branch }}
+          echo "Release ref: ${{ steps.create-context.outputs.release_ref }}"
+          git checkout -b ${{ steps.create-context.outputs.release_ref }}
 
       - name: Update dependencies
+        if: ${{ inputs.set-property-command }} != ''
         run: |
           echo "Command to execute: ${{ inputs.set-property-command }}"
           ${{ inputs.set-property-command }}
@@ -98,12 +105,12 @@ jobs:
         run: |
           mvn versions:commit # accepts the changes and removes the backup of the pom 
           git add .
-          git commit -m "Release ${{ env.release_tag }} branch ready"
-          git push origin ${{ env.release_branch }}
+          git commit -m "Release ${{ steps.create-context.outputs.release_ref }} branch ready"
+          git push origin ${{ steps.create-context.outputs.release_ref }}
 
       - name: create release tag
         id: release-tag
-        if: ${{ inputs.is-candidate }}
+        if: ${{ inputs.tag }} != ''
         run: |
-          git tag ${{ env.release_tag }}
-          git push origin ${{ env.release_tag }}
+          git tag ${{ steps.create-context.outputs.release_ref }}
+          git push origin tag ${{ steps.create-context.outputs.release_ref }}
