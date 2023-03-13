@@ -95,7 +95,7 @@ jobs:
       - name: Create branch context
         id: create-branch-context
         run: |
-          echo "release_branch=release/${{ env.release_ref }}" >> $GITHUB_OUTPUT
+          echo "release_branch=release/${{ steps.create-context.outputs.release_ref }}" >> $GITHUB_OUTPUT
 
       - name: create release branch
         run: |          
