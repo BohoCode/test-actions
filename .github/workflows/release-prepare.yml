@@ -1,0 +1,106 @@
+name: 2-Prepare release
+id: prepare_release_workflow
+on:
+  workflow_call:
+    inputs:
+      is_final_release:
+        required: false
+        type: boolean
+        default: false
+      candidate_number:
+        required: false
+        type: string
+        default: 1
+    outputs:
+      release_ref:
+        description: "Release reference"
+        value: ${{ jobs.release_prepare.outputs.release_ref }}
+      tag_ref:
+        description: "Tag reference"
+        value: ${{ jobs.release_prepare.outputs.tag_ref }}
+      release_branch:
+        description: "Release branch"
+        value: ${{ jobs.release_prepare.outputs.release_branch }}
+
+env:
+  GIT_AUTHOR_NAME: ${{ secrets.GIT_COMMIT_USERNAME_BOT }}
+  GIT_AUTHOR_EMAIL: ${{ secrets.GIT_COMMIT_AUTHOR_EMAIL_BOT }}
+  GIT_COMMITTER_NAME: ${{ secrets.GIT_COMMIT_USERNAME_BOT }}
+  GIT_COMMITTER_EMAIL: ${{ secrets.GIT_COMMIT_AUTHOR_EMAIL_BOT }}
+
+jobs:
+  release_prepare:
+    name: Release prepare
+    runs-on: ubuntu-latest
+    # Map the job outputs to step outputs
+    outputs:
+      release_branch: ${{ steps.create_branch_context.outputs.release_branch }}
+      release_ref: ${{ steps.create_context.outputs.release_ref }}
+      tag_ref: ${{ steps.create_context.outputs.tag_ref }}
+
+    steps:
+      # https://github.com/actions/checkout
+      - uses: actions/checkout@v3
+        id: checkout
+        name: checkout master
+
+      # https://github.com/crazy-max/ghaction-import-gpg
+      # https://httgp.com/signing-commits-in-github-actions/
+      - name: Import GPG key
+        id: gpg
+        uses: crazy-max/ghaction-import-gpg@v5
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY_BOT }}
+          passphrase: ${{ secrets.GPG_KEY_PASSPHRASE_BOT }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+
+      - name: Remove snapshots suffix
+        id: remove_snapshots
+        run: |
+          mvn versions:set -DremoveSnapshot -DgenerateBackupPoms # remove snapshot and creates a backup of the poms
+
+      - name: get version
+        id: get_version
+        run: |
+          echo "VERSION=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )" >> $GITHUB_ENV
+
+      # https://semver.org/
+      - name: Create environment context
+        id: create_context
+        run: |
+          echo "Version is: ${{ env.VERSION }}"
+          if ${{ inputs.is_final_release }}; then
+            echo "is a final release"
+            echo "release_ref=${{ env.VERSION }}" >> $GITHUB_OUTPUT
+            echo "tag_ref=v${{ env.VERSION }}" >> $GITHUB_OUTPUT
+          else
+            echo "is not a final release"
+            echo "release_ref=${{ env.VERSION }}-rc.${{ inputs.candidate_number }}" >> $GITHUB_OUTPUT
+            echo "tag_ref=v${{ env.VERSION }}-rc.${{ inputs.candidate_number }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create branch context
+        id: create_branch_context
+        run: |
+          echo "release_branch=release/${{ steps.create_context.outputs.release_ref }}" >> $GITHUB_OUTPUT
+
+      - name: create release branch
+        id: create_release_branch
+        run: |
+          echo "Release branch: ${{ steps.create_branch_context.outputs.release_branch }}"
+          git checkout -b ${{ steps.create_branch_context.outputs.release_branch }}
+
+      - name: Push release branch
+        id: push_release_branch
+        run: |
+          mvn versions:commit # accepts the changes and removes the backup of the pom 
+          git add .
+          git commit -m "Release ${{ steps.create_context.outputs.release_ref }} branch ready"
+          git push origin ${{ steps.create_branch_context.outputs.release_branch }}
+
+      - name: create release tag
+        id: release_tag
+        run: |
+          git tag ${{ steps.create_context.outputs.tag_ref }}
+          git push origin tag ${{ steps.create_context.outputs.tag_ref }}
