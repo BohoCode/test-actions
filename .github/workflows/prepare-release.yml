@@ -26,6 +26,9 @@ on:
       tag_ref:
         description: "Tag reference"
         value: ${{ jobs.release_prepare.outputs.tag_ref }}
+      release_branch:
+        description: "Release branch"
+        value: ${{ jobs.release_prepare.outputs.release_branch }}
 #      release_tag:
 #        description: "release tag created"
 #        value: ${{ jobs.release_master.outputs.release_tag }}
@@ -44,8 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     # Map the job outputs to step outputs
     outputs:
-#      release_tag: ${{ steps.create-release.outputs.release_tag }}
-#      release_branch: ${{ steps.create-release.outputs.release_branch }}
+      release_branch: ${{ steps.create-branch-context.outputs.release_branch }}
       release_ref: ${{ steps.create-context.outputs.release_ref }}
       tag_ref: ${{ steps.create-context.outputs.tag_ref }}
 
@@ -90,15 +92,15 @@ jobs:
           echo "tag_ref=v${{ env.VERSION }}-rc.${{ inputs.candidate-number }}" >> $GITHUB_OUTPUT
           fi
 
-#      - name: Create branch context
-#        run: |
-#          echo "release_branch=release/${{ env.release_tag }}" >> $GITHUB_ENV
-#          echo "release_branch=release/${{ env.release_tag }}" >> $GITHUB_OUTPUT
+      - name: Create branch context
+        id: create-branch-context
+        run: |
+          echo "release_branch=release/${{ env.release_ref }}" >> $GITHUB_OUTPUT
 
       - name: create release branch
         run: |          
           echo "Release ref: ${{ steps.create-context.outputs.release_ref }}"
-          git checkout -b ${{ steps.create-context.outputs.release_ref }}
+          git checkout -b release/${{ steps.create-context.outputs.release_ref }}
 
       - name: Update dependencies
         if: ${{ inputs.set-property-command }} != ''
@@ -110,8 +112,8 @@ jobs:
         run: |
           mvn versions:commit # accepts the changes and removes the backup of the pom 
           git add .
-          git commit -m "Release v${{ steps.create-context.outputs.release_ref }} branch ready"
-          git push origin ${{ steps.create-context.outputs.release_ref }}
+          git commit -m "Release ${{ steps.create-context.outputs.release_ref }} branch ready"
+          git push origin release/${{ steps.create-context.outputs.release_ref }}
 
       - name: create release tag
         id: release-tag

@@ -54,18 +54,18 @@ jobs:
       candidate-number: ${{ inputs.candidate-number }}
       set-property-command: "mvn versions:set-property -Dproperty=property.test.version -DnewVersion=8.0.0"
     secrets: inherit
+    # outputs: release_ref, tag_ref, release_branch
 
   build-release:
     runs-on: ubuntu-latest
     name: build and publish release
     needs: prepare-release
     steps:
-      - name: prepare context
+      - name: outputs context
         run: |
           echo "release ref: ${{ needs.prepare-release.outputs.release_ref }}"
-          echo "release_ref=${{ needs.prepare-release.outputs.release_ref }}" >> $GITHUB_ENV
+          echo "release_branch: ${{ needs.prepare-release.outputs.release_branch }}"
           echo "tag_ref: ${{ needs.prepare-release.outputs.tag_ref }}"
-          echo "tag_ref=${{ needs.prepare-release.outputs.tag_ref }}" >> $GITHUB_ENV
 
 #      - name: show variables
 #        run: |
@@ -89,10 +89,10 @@ jobs:
           git_commit_gpgsign: true
 
       - name: checkout branch
-        if: ${{ inputs.tag }} == '' && ${{ env.release_ref }} != ''
+        if: ${{ inputs.tag }} == '' && ${{ needs.prepare-release.outputs.release_ref }} != ''
         run: |
           git fetch --all # we need to do a fetch because the branch isn't merged in master
-          git checkout origin/${{ env.release_ref }}
+          git checkout origin/${{ needs.prepare-release.outputs.release_branch }}
 
       - uses: actions/setup-java@v3
         name: set java and maven cache
@@ -115,7 +115,7 @@ jobs:
         if: success()
         run: |
           # Create a release from input tag
-          gh release create  --verify-tag ${{ env.tag_ref }} -t "${{ env.release_ref }}" --notes "${{ inputs.notes }}" # --generate-notes
+          gh release create  --verify-tag ${{ needs.prepare-release.outputs.tag_ref }} -t "${{ needs.prepare-release.outputs.release_ref }}" --notes "${{ inputs.notes }}" # --generate-notes
 
       - name: Prepare next development iteration
         run: |
@@ -123,8 +123,8 @@ jobs:
           mvn versions:set -DnextSnapshot
           git add .
           git commit -m "Prepare the next development iteration"
-          git push origin HEAD:${{ env.release_ref }}
+          git push origin HEAD:${{ needs.prepare-release.outputs.release_branch }}
 
       - name: create pull request
         run: |
-          gh pr create -H ${{ env.release_ref }} -B master --title "Release ${{ env.release_ref }} created" --body "- Prepare the next development iteration"
+          gh pr create -H ${{ needs.prepare-release.outputs.release_branch }} -B master --title "Release ${{ needs.prepare-release.outputs.release_ref }} created" --body "- Prepare the next development iteration"
