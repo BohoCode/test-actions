@@ -115,7 +115,7 @@ jobs:
         if: success()
         run: |
           # Create a release from input tag
-          gh release create  ${{ env.release_ref }} -t "${{ env.release_ref }}" --notes "${{ inputs.notes }}" # --generate-notes
+          gh release create  --verify-tag ${{ env.tag_ref }} -t "${{ env.release_ref }}" --notes "${{ inputs.notes }}" # --generate-notes
 
       - name: Prepare next development iteration
         run: |
@@ -127,4 +127,4 @@ jobs:
 
       - name: create pull request
         run: |
-          gh pr create -H ${{ env.release_ref }} -B master --title "Release ${{ env.release_ref }} created" --body "Next development iteration ready"
+          gh pr create -H ${{ env.release_ref }} -B master --title "Release ${{ env.release_ref }} created" --body "- Prepare the next development iteration"

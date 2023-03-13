@@ -82,12 +82,12 @@ jobs:
           echo "Version is: ${{ env.VERSION }}"
           if ${{ inputs.is-final-release }}; then
             echo "is a final release"
-            echo "release_ref=release/${{ env.VERSION }}" >> $GITHUB_OUTPUT
-            echo "tag_ref=${{ env.VERSION }}" >> $GITHUB_OUTPUT
+            echo "release_ref=${{ env.VERSION }}" >> $GITHUB_OUTPUT
+            echo "tag_ref=v${{ env.VERSION }}" >> $GITHUB_OUTPUT
           else
             echo "is not a final release"
-            echo "release_ref=release/${{ env.VERSION }}-rc.${{ inputs.candidate-number }}" >> $GITHUB_OUTPUT
-          echo "tag_ref=${{ env.VERSION }}-rc.${{ inputs.candidate-number }}" >> $GITHUB_OUTPUT
+            echo "release_ref=${{ env.VERSION }}-rc.${{ inputs.candidate-number }}" >> $GITHUB_OUTPUT
+          echo "tag_ref=v${{ env.VERSION }}-rc.${{ inputs.candidate-number }}" >> $GITHUB_OUTPUT
           fi
 
 #      - name: Create branch context
