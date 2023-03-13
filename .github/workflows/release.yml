@@ -1,5 +1,5 @@
-name: Create release
-id: create_release_workflow
+name: create_release_workflow
+run-name: Create Release
 # **What it does**:
 # Reuse workflow 'prepare-release': update versions, create tag and release branch with release versions
 # Build the maven project as release version and publish the artifact in forgerock maven repo

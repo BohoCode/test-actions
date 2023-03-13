@@ -1,5 +1,5 @@
-name: 2-Prepare release
-id: prepare_release_workflow
+name: release-prepare-workflow
+run-name: Release prepare
 on:
   workflow_call:
     inputs:
