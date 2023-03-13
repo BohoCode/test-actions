@@ -84,14 +84,14 @@ jobs:
 
       - name: Create github release
         id: release
-        if: ${{ step.deploy.outcome }} == 'success'
+        if: ${{ steps.deploy.outcome }} == 'success'
         run: |
           # Create a release from input tag
           gh release create  --verify-tag ${{ needs.release_prepare.outputs.tag_ref }} -t "${{ needs.release_prepare.outputs.release_ref }}" --notes "${{ inputs.notes }}"
 
       - name: Prepare next development iteration
         id: prepare_next_dev
-        if: ${{ step.release.outcome }} == 'success'
+        if: ${{ steps.release.outcome }} == 'success'
         run: |
           mvn versions:set -DnextSnapshot
           git add .
