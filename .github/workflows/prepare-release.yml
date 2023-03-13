@@ -23,6 +23,9 @@ on:
       release_ref:
         description: "Release reference"
         value: ${{ jobs.release_prepare.outputs.release_ref }}
+      tag_ref:
+        description: "Tag reference"
+        value: ${{ steps.release_prepare.outputs.tag_ref }}
 #      release_tag:
 #        description: "release tag created"
 #        value: ${{ jobs.release_master.outputs.release_tag }}
@@ -44,6 +47,7 @@ jobs:
 #      release_tag: ${{ steps.create-release.outputs.release_tag }}
 #      release_branch: ${{ steps.create-release.outputs.release_branch }}
       release_ref: ${{ steps.create-context.outputs.release_ref }}
+      tag_ref: ${{ steps.create-context.outputs.tag_ref }}
 
     steps:
       # https://github.com/actions/checkout
@@ -78,12 +82,12 @@ jobs:
           echo "Version is: ${{ env.VERSION }}"
           if ${{ inputs.is-final-release }}; then
             echo "is a final release"
-            # echo "release_ref=${{ env.VERSION }}" >> $GITHUB_ENV
-            echo "release_ref=${{ env.VERSION }}" >> $GITHUB_OUTPUT
+            echo "release_ref=v${{ env.VERSION }}" >> $GITHUB_OUTPUT
+            echo "tag_ref=${{ env.VERSION }}" >> $GITHUB_OUTPUT
           else
             echo "is not a final release"
-            # echo "release_ref=${{ env.VERSION }}-rc.${{ inputs.candidate-number }}" >> $GITHUB_ENV
-            echo "release_ref=${{ env.VERSION }}-rc.${{ inputs.candidate-number }}" >> $GITHUB_OUTPUT
+            echo "release_ref=v${{ env.VERSION }}-rc.${{ inputs.candidate-number }}" >> $GITHUB_OUTPUT
+          echo "tag_ref=${{ env.VERSION }}-rc.${{ inputs.candidate-number }}" >> $GITHUB_OUTPUT
           fi
 
 #      - name: Create branch context
@@ -106,12 +110,12 @@ jobs:
         run: |
           mvn versions:commit # accepts the changes and removes the backup of the pom 
           git add .
-          git commit -m "Release ${{ steps.create-context.outputs.release_ref }} branch ready"
+          git commit -m "Release v${{ steps.create-context.outputs.release_ref }} branch ready"
           git push origin ${{ steps.create-context.outputs.release_ref }}
 
       - name: create release tag
         id: release-tag
         if: ${{ inputs.tag }} != ''
         run: |
-          git tag ${{ steps.create-context.outputs.release_ref }}
-          git push origin tag ${{ steps.create-context.outputs.release_ref }}
+          git tag ${{ steps.create-context.outputs.tag_ref }}
+          git push origin tag ${{ steps.create-context.outputs.tag_ref }}
