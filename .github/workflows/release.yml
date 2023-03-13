@@ -99,6 +99,6 @@ jobs:
           git push origin HEAD:${{ needs.release_prepare.outputs.release_branch }}
 
       - name: create pull request
-        if: ${{ steps.prepare_next_dev.outcome }] == 'success'
+        if: ${{ steps.prepare_next_dev.outcome }} == 'success'
         run: |
           gh pr create -H ${{ needs.release_prepare.outputs.release_branch }} -B master --title "Release ${{ needs.release_prepare.outputs.release_ref }} created" --body "- Prepare the next development iteration"
