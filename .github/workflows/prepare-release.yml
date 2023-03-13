@@ -25,7 +25,7 @@ on:
         value: ${{ jobs.release_prepare.outputs.release_ref }}
       tag_ref:
         description: "Tag reference"
-        value: ${{ steps.release_prepare.outputs.tag_ref }}
+        value: ${{ jobs.release_prepare.outputs.tag_ref }}
 #      release_tag:
 #        description: "release tag created"
 #        value: ${{ jobs.release_master.outputs.release_tag }}
