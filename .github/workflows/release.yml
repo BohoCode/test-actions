@@ -33,7 +33,8 @@ env:
 jobs:
   release_prepare: # prepare for a release in scm, creates the tag and release branch with the proper release versions
     name: Call release prepare
-    uses: ./.github/workflows/release-prepare.yml
+    # uses: ./.github/workflows/release-prepare.yml # same repository
+    uses: SecureApiGateway/secure-api-gateway-parent/.github/workflows/release-prepare.yml@master
     with:
       is_final_release: ${{ inputs.is_final_release }}
       candidate_number: ${{ inputs.candidate_number }}
