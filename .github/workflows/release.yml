@@ -54,7 +54,7 @@ jobs:
 
     # uses: ./.github/workflows/release-prepare.yml # same repository
     uses: SecureApiGateway/secure-api-gateway-parent/.github/workflows/release-prepare.yml@issue/812-action-release-prepare-workflow
-    if: ${{ jobs.validate_inputs.result }} == 'success'
+    if: ${{ job.validate_inputs.result }} == 'success'
     with:
       is_final_release: ${{ inputs.is_final_release }}
       candidate_number: ${{ inputs.candidate_number }}
