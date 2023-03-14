@@ -37,20 +37,24 @@ env:
 
 jobs:
   validate_inputs:
+    runs-on: ubuntu-latest
     name: validate inputs
     id: validate_inputs
-    run: |
-      if [ -z ${{ inputs.parent_version }} ]; then
-        echo "The input 'parent_version' cannot be null or empty"
-        exit 1
-      fi
+    steps:
+      name: validations
+      run: |
+        if [ -z ${{ inputs.parent_version }} ]; then
+          echo "The input 'parent_version' cannot be null or empty"
+          exit 1
+        fi
 
   release_prepare: # prepare for a release in scm, creates the tag and release branch with the proper release versions
     name: Call release prepare
     needs: validate_inputs
-    if: ${{ jobs.validate_inputs.result }} == 'success'
+
     # uses: ./.github/workflows/release-prepare.yml # same repository
     uses: SecureApiGateway/secure-api-gateway-parent/.github/workflows/release-prepare.yml@issue/812-action-release-prepare-workflow
+    if: ${{ jobs.validate_inputs.result }} == 'success'
     with:
       is_final_release: ${{ inputs.is_final_release }}
       candidate_number: ${{ inputs.candidate_number }}
