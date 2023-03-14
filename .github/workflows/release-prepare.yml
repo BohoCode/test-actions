@@ -21,7 +21,11 @@ on:
       release_branch:
         description: "Release branch"
         value: ${{ jobs.release_prepare.outputs.release_branch }}
-
+    secrets:
+      GPG_PRIVATE_KEY_BOT:
+        required: true
+      GPG_KEY_PASSPHRASE_BOT:
+        required: true
 env:
   GIT_AUTHOR_NAME: ${{ secrets.GIT_COMMIT_USERNAME_BOT }}
   GIT_AUTHOR_EMAIL: ${{ secrets.GIT_COMMIT_AUTHOR_EMAIL_BOT }}
