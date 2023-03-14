@@ -39,6 +39,7 @@ jobs:
         echo "The input 'parent_version' cannot be null or empty"
         exit 1
       fi
+
   release_prepare: # prepare for a release in scm, creates the tag and release branch with the proper release versions
     name: Call release prepare
     needs: validate_inputs
