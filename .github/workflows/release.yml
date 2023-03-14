@@ -24,8 +24,8 @@ on:
         type: string
         default: 1
       parent_version:
-        description: "Parent version to be set skipping resolution"
-        required: true
+        description: "Parent version to be set skipping resolution pattern: x.y.z{-SNAPSHOT}"
+        required: false
         type: string
         default: ''
 env:
