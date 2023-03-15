@@ -7,6 +7,13 @@
     <artifactId>test-actions</artifactId>
     <packaging>pom</packaging>
 
+    <parent>
+        <groupId>com.forgerock.sapi.gateway</groupId>
+        <artifactId>secure-api-gateway-parent</artifactId>
+        <version>0.9.0-SNAPSHOT</version>
+        <relativePath />
+    </parent>
+
     <modules>
         <module>some-jar</module>
     </modules>
