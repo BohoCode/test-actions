@@ -39,7 +39,6 @@ jobs:
   validate_inputs:
     runs-on: ubuntu-latest
     name: validate inputs
-    id: validate_inputs
     steps:
       - name: validations
         run: |
