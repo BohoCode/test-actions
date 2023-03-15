@@ -1,5 +1,5 @@
 name: create_release_workflow
-run-name: Create release
+run-name: Create release final::${{ inputs.is_final_release }} candidate::${{ inputs.candidate_number }}
 # **What it does**:
 # Reuse workflow 'prepare-release': update versions, create tag and release branch with release versions
 # Build the maven project as release version and publish the artifact in forgerock maven repo
