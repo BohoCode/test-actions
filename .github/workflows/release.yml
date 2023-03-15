@@ -83,10 +83,6 @@ jobs:
           architecture: x64
           cache: 'maven'
 
-      - name: Update parent version
-        run: |
-          mvn versions:update-parent -DparentVersion # sets the parent version to the latest version (no snapshot) 
-
       - name: Deploy release
         id: deploy
         run: |
@@ -97,7 +93,7 @@ jobs:
         if: ${{ steps.deploy.outcome }} == 'success'
         run: |
           # Create a release from input tag
-          gh release create  --verify-tag ${{ needs.release_prepare.outputs.tag_ref }} -t "${{ needs.release_prepare.outputs.release_ref }}" --notes "${{ inputs.notes }}"
+          gh release create  --draft --verify-tag ${{ needs.release_prepare.outputs.tag_ref }} -t "${{ needs.release_prepare.outputs.release_ref }}" --notes "${{ inputs.notes }}"
 
       - name: Prepare next development iteration
         id: prepare_next_dev
