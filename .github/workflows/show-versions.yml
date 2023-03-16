@@ -1,0 +1,14 @@
+name: called output
+
+on:
+  workflow_call:
+
+jobs:
+  show:
+    name: show values
+    runs-on: ubuntu-latest
+    steps:
+      - name: show docker version
+        run: |
+          echo "docker version: $(docker --version)"
+        
