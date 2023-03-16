@@ -1,4 +1,4 @@
-name: called output
+name: Show versions
 
 on:
   workflow_call:
