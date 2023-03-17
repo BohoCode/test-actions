@@ -103,8 +103,8 @@
     </repositories>
 
     <scm>
-        <connection>scm:git:git@github.com:jorgesanchezperez/test-actions.git</connection>
-        <developerConnection>scm:git:git@github.com:jorgesanchezperez/test-actions.git</developerConnection>
+        <connection>scm:git:${project.scm.url}</connection>
+        <developerConnection>scm:git:${project.scm.url}</developerConnection>
         <url>https://github.com/jorgesanchezperez/test-actions.git</url>
         <tag>HEAD</tag>
     </scm>
