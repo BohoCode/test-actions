@@ -23,6 +23,10 @@ on:
         required: false
         type: string
         default: 1
+      release_version_number:
+        description: "Provide release version number"
+        required: require
+        type: string
 env:
   GH_TOKEN: ${{ github.token }}
   GIT_AUTHOR_NAME: ${{ secrets.GIT_COMMIT_USERNAME_BOT }}
