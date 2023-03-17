@@ -12,6 +12,9 @@ on:
         description: "Provide release version number"
         required: true
         type: string
+
+permissions: read-all|write-all
+
 env:
 #  GH_TOKEN: ${{ github.token }}
   GIT_AUTHOR_NAME: ${{ secrets.GIT_COMMIT_USERNAME_BOT }}
@@ -32,4 +35,3 @@ jobs:
       GPG_KEY_PASSPHRASE_BOT: ${{ secrets.GPG_KEY_PASSPHRASE_BOT }}
       GIT_COMMIT_USERNAME_BOT: ${{ secrets.GIT_COMMIT_USERNAME_BOT }}
       GIT_COMMIT_AUTHOR_EMAIL_BOT: ${{ secrets.GIT_COMMIT_AUTHOR_EMAIL_BOT }}
-    permissions: read-all|write-all
