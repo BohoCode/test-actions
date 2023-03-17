@@ -25,7 +25,7 @@ on:
         default: 1
       release_version_number:
         description: "Provide release version number"
-        required: require
+        required: true
         type: string
 env:
   GH_TOKEN: ${{ github.token }}
