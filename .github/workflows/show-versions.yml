@@ -14,4 +14,7 @@ jobs:
       - name: docker help
         run: |
           echo "Docker help: $(docker push --help)"
+      - name: docker help
+        run: |
+          echo "Git version: $(git --version)"
         
