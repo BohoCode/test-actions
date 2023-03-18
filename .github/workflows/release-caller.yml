@@ -52,5 +52,5 @@ jobs:
     with:
       release_version_number: ${{ inputs.release_version_number }}
       release_notes: ${{ inputs.notes }}
-    secrets:
-      GH_TOKEN: ${{ github.token }}
+#    secrets:
+#      GH_TOKEN: ${{ github.token }}
