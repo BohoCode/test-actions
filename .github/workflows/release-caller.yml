@@ -53,6 +53,6 @@ jobs:
     with:
       release_version_number: ${{ inputs.release_version_number }}
       release_branch_ref: ${{ needs.release_prepare.outputs.release_branch_ref }}
-      release_tag_ref: ${{ needs.release_prepare.outputs.release_tag_ref }}"
+      release_tag_ref: ${{ needs.release_prepare.outputs.release_tag_ref }}
       release_notes: ${{ inputs.notes }}
       reviewer: jorgesanchezperez
