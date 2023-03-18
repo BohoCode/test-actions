@@ -52,4 +52,5 @@ jobs:
     with:
       release_version_number: ${{ inputs.release_version_number }}
       release_notes: ${{ inputs.notes }}
-      gh_cli_token: ${{ github.token }}
+    secrets:
+      GH_TOKEN: ${{ github.token }}
