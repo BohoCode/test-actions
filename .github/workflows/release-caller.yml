@@ -43,3 +43,12 @@ jobs:
     secrets: # inherit only when is the same repository
       FR_ARTIFACTORY_USER: ${{ secrets.FR_ARTIFACTORY_USER }}
       FR_ARTIFACTORY_TOKEN: ${{ secrets.FR_ARTIFACTORY_TOKEN }}
+
+  release_draft_and_pr:
+    name: Call publish draft and PR
+    needs: release_java
+    # uses: ./.github/workflows/release-prepare.yml # same repository
+    uses: SecureApiGateway/secure-api-gateway-parent/.github/workflows/release-publish-draft-and-pr.yml@issue/812-action-release-prepare-workflow
+    with:
+      release_version_number: ${{ inputs.release_version_number }}
+      release_notes: ${{ inputs.notes }}
