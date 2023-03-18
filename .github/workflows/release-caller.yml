@@ -40,7 +40,7 @@ jobs:
     uses: SecureApiGateway/secure-api-gateway-parent/.github/workflows/release-publish-java.yml@issue/812-action-release-prepare-workflow
     with:
       release_version_number: ${{ inputs.release_version_number }}
-      release_tag_ref: ${{ needs.release_prepare.outputs.release_tag_ref }}"
+      release_tag_ref: ${{ needs.release_prepare.outputs.release_tag_ref }}
     secrets: # inherit only when is the same repository
       FR_ARTIFACTORY_USER: ${{ secrets.FR_ARTIFACTORY_USER }}
       FR_ARTIFACTORY_TOKEN: ${{ secrets.FR_ARTIFACTORY_TOKEN }}
@@ -52,7 +52,7 @@ jobs:
     uses: SecureApiGateway/secure-api-gateway-parent/.github/workflows/release-publish-draft-and-pr.yml@issue/812-action-release-prepare-workflow
     with:
       release_version_number: ${{ inputs.release_version_number }}
-      release_branch_ref: ${{ needs.release_prepare.outputs.release_branch_ref }}"
+      release_branch_ref: ${{ needs.release_prepare.outputs.release_branch_ref }}
       release_tag_ref: ${{ needs.release_prepare.outputs.release_tag_ref }}"
       release_notes: ${{ inputs.notes }}
       reviewer: jorgesanchezperez
