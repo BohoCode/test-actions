@@ -12,11 +12,6 @@ on:
         description: "Provide release version number"
         required: true
         type: string
-      skip_publish:
-        description: "skip publish process"
-        required: false
-        type: boolean
-        default: false
 env:
 #  GH_TOKEN: ${{ github.token }}
   GIT_AUTHOR_NAME: ${{ secrets.GIT_COMMIT_USERNAME_BOT }}
