@@ -52,3 +52,4 @@ jobs:
     with:
       release_version_number: ${{ inputs.release_version_number }}
       release_notes: ${{ inputs.notes }}
+      GH_TOKEN: ${{ env.GH_TOKEN }}
