@@ -12,6 +12,11 @@ on:
         description: "Provide release version number"
         required: true
         type: string
+      skip_publish:
+        description: "skip publish process"
+        required: false
+        type: boolean
+        default: false
 env:
 #  GH_TOKEN: ${{ github.token }}
   GIT_AUTHOR_NAME: ${{ secrets.GIT_COMMIT_USERNAME_BOT }}
@@ -32,3 +37,13 @@ jobs:
       GPG_KEY_PASSPHRASE_BOT: ${{ secrets.GPG_KEY_PASSPHRASE_BOT }}
       GIT_COMMIT_USERNAME_BOT: ${{ secrets.GIT_COMMIT_USERNAME_BOT }}
       GIT_COMMIT_AUTHOR_EMAIL_BOT: ${{ secrets.GIT_COMMIT_AUTHOR_EMAIL_BOT }}
+
+  release_java:
+    name: Call publish java
+    # uses: ./.github/workflows/release-prepare.yml # same repository
+    uses: SecureApiGateway/secure-api-gateway-parent/.github/workflows/release-prepare.yml@issue/812-action-release-prepare-workflow
+    with:
+      release_version_number: ${{ inputs.release_version_number }}
+    secrets: # inherit only when is the same repository
+      FR_ARTIFACTORY_USER: ${{ secrets.FR_ARTIFACTORY_USER }}
+      FR_ARTIFACTORY_TOKEN: ${{ secrets.FR_ARTIFACTORY_TOKEN }}
