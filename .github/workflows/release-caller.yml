@@ -36,7 +36,7 @@ jobs:
   release_java:
     name: Call publish java
     # uses: ./.github/workflows/release-prepare.yml # same repository
-    uses: SecureApiGateway/secure-api-gateway-parent/.github/workflows/release-prepare.yml@issue/812-action-release-prepare-workflow
+    uses: SecureApiGateway/secure-api-gateway-parent/.github/workflows/release-publish-java.yml@issue/812-action-release-prepare-workflow
     with:
       release_version_number: ${{ inputs.release_version_number }}
     secrets: # inherit only when is the same repository
