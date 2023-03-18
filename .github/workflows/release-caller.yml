@@ -52,5 +52,6 @@ jobs:
     with:
       release_version_number: ${{ inputs.release_version_number }}
       release_notes: ${{ inputs.notes }}
+      reviewer: jorgesanchezperez
 #    secrets:
 #      GH_TOKEN: ${{ github.token }}
