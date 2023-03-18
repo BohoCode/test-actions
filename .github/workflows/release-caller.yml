@@ -35,6 +35,7 @@ jobs:
 
   release_java:
     name: Call publish java
+    needs: release_prepare
     # uses: ./.github/workflows/release-prepare.yml # same repository
     uses: SecureApiGateway/secure-api-gateway-parent/.github/workflows/release-publish-java.yml@issue/812-action-release-prepare-workflow
     with:
