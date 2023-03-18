@@ -26,38 +26,21 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <property.test.version>1.0.0</property.test.version>
         <java.version>14</java.version>
-        <maven-release-plugin.version>3.0.0-M1</maven-release-plugin.version>
-        <maven-deploy-plugin.version>3.1.0</maven-deploy-plugin.version>
-        <versions-maven-plugin.version>2.15.0</versions-maven-plugin.version>
     </properties>
     <build>
         <plugins>
-            <!--            <plugin>-->
-            <!--                <groupId>org.apache.maven.plugins</groupId>-->
-            <!--                <artifactId>maven-compiler-plugin</artifactId>-->
-            <!--                <version>${maven-compiler-plugin.version}</version>-->
-            <!--                <configuration>-->
-            <!--                    <release>${java.version}</release>-->
-            <!--                    <verbose>false</verbose>-->
-            <!--                    <fork>true</fork>-->
-            <!--                </configuration>-->
-            <!--            </plugin>-->
-            <!-- https://mvnrepository.com/artifact/org.codehaus.mojo/versions-maven-plugin -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-                <version>${versions-maven-plugin.version}</version>
             </plugin>
             <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-deploy-plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
-                <version>${maven-deploy-plugin.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>${maven-release-plugin.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
