@@ -12,9 +12,6 @@ on:
         description: "Provide release version number"
         required: true
         type: string
-
-permissions: write-all
-
 env:
 #  GH_TOKEN: ${{ github.token }}
   GIT_AUTHOR_NAME: ${{ secrets.GIT_COMMIT_USERNAME_BOT }}
@@ -33,5 +30,5 @@ jobs:
     secrets: # inherit only when is the same repository
       GPG_PRIVATE_KEY_BOT: ${{ secrets.GPG_PRIVATE_KEY_BOT }}
       GPG_KEY_PASSPHRASE_BOT: ${{ secrets.GPG_KEY_PASSPHRASE_BOT }}
-      GIT_COMMIT_USERNAME_BOT: ${{ secrets.REPO_USER_NAME }}
-      GIT_COMMIT_AUTHOR_EMAIL_BOT: ${{ secrets.REPO_USER_EMAIL }}
+      GIT_COMMIT_USERNAME_BOT: ${{ secrets.GIT_COMMIT_USERNAME_BOT }}
+      GIT_COMMIT_AUTHOR_EMAIL_BOT: ${{ secrets.GIT_COMMIT_AUTHOR_EMAIL_BOT }}
