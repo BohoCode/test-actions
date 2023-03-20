@@ -1,0 +1,68 @@
+name: release-publish-helm
+run-name: Release Helm Charts version '${{ inputs.release_version_number }}'
+on:
+  workflow_call:
+    inputs:
+      root_helm_directory:
+        required: true
+        type: string
+      release_version_number:
+        required: true
+        type: string
+      release_tag_ref:
+        required: true
+        type: string
+    secrets:
+      FR_ARTIFACTORY_USER:
+        required: true
+      FR_ARTIFACTORY_TOKEN:
+        required: true
+      RELEASE_REPO:
+        required: true
+jobs:
+  checkout_tag:
+    name: Build and publish docker image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        id: checkout
+        name: checkout master
+        with:
+          ref: v${{ inputs.release_tag_ref }} # tag created by maven release plugin prepare goal
+  
+  build_helm_package:
+    name: Run Kubernetes tools
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ inputs.root_helm_directory }}
+    steps:
+      - uses: stefanprodan/kube-tools@v1
+        id: package
+        name: package_helm
+        env: 
+          HELM_DIR: ${{ inputs.root_helm_directory }}
+        with:
+          kubectl: 1.16.2
+          helmv3: 3.0.0  
+        run: |
+          helm package
+
+  publish_helm_chart:
+    name: Publish helm Charts
+    runs-on: ubuntu-latest-4-cores
+    defaults:
+      run: 
+        shell: bash
+        working-directory: ${{ inputs.root_helm_directory }}
+    steps:
+      - uses: jfrog/setup-jfrog-cli@v3
+        env:
+          # JFrog platform url (for example: https://acme.jfrog.io) 
+          JF_URL: ${{ secrets.RELEASE_REPO }}
+          # JFrog Platform access token
+          JF_ACCESS_TOKEN: ${{ secrets.FR_ARTIFACTORY_TOKEN }}
+        run:
+            jf rt ping
+    
