@@ -59,7 +59,7 @@ jobs:
 
   release_draft_and_pr:
     name: Call publish draft and PR
-    needs: [release_prepare, release_java]
+    needs: [release_prepare, release_java, release_docker]
     # uses: ./.github/workflows/release-prepare.yml # same repository
     uses: SecureApiGateway/secure-api-gateway-parent/.github/workflows/release-publish-draft-and-pr.yml@issue/812-action-release-prepare-workflow
     with:
