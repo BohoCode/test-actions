@@ -16,7 +16,7 @@ docker-push: clean
 	  -DgcrRepo=${repo} --file server/pom.xml
 
 docker: clean
-	mvn install package -DskipTests=true -Dtag=${tag} \
+	mvn install package dockerfile:push -DskipTests=true -Dtag=${tag} \
 	  -DgcrRepo=${repo} --file server/pom.xml
 
 helm: clean
