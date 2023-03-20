@@ -69,6 +69,7 @@ jobs:
         release_tag_ref: v3.0.0
         # release_tag_ref: ${{ needs.release_prepare.outputs.release_tag_ref }}
       secrets:
+        FR_ARTIFACTORY_USER: ${{ secrets.FR_ARTIFACTORY_USER }}
         FR_ARTIFACTORY_TOKEN: ${{ secrets.FR_ARTIFACTORY_TOKEN }}
         RELEASE_REPO: ${{ secrets.HELM_REPO }}
 
