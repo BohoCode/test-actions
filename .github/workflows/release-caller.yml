@@ -71,7 +71,7 @@ jobs:
       secrets:
         FR_ARTIFACTORY_USER: ${{ secrets.FR_ARTIFACTORY_USER }}
         FR_ARTIFACTORY_TOKEN: ${{ secrets.FR_ARTIFACTORY_TOKEN }}
-        RELEASE_REPO: ${{ secrets.HELM_REPO }}
+        HELM_REPO: ${{ secrets.HELM_REPO }}
 
 #  release_draft_and_pr:
 #    name: Call publish draft and PR
