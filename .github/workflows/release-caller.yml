@@ -33,21 +33,22 @@ jobs:
       GIT_COMMIT_USERNAME_BOT: ${{ secrets.GIT_COMMIT_USERNAME_BOT }}
       GIT_COMMIT_AUTHOR_EMAIL_BOT: ${{ secrets.GIT_COMMIT_AUTHOR_EMAIL_BOT }}
 
-  release_java:
-    name: Call publish java
-    needs: release_prepare
-    # uses: ./.github/workflows/release-prepare.yml # same repository
-    uses: SecureApiGateway/secure-api-gateway-parent/.github/workflows/release-publish-java.yml@issue/812-action-release-prepare-workflow
-    with:
-      release_version_number: ${{ inputs.release_version_number }}
-      release_tag_ref: ${{ needs.release_prepare.outputs.release_tag_ref }}
-    secrets: # inherit only when is the same repository
-      FR_ARTIFACTORY_USER: ${{ secrets.FR_ARTIFACTORY_USER }}
-      FR_ARTIFACTORY_TOKEN: ${{ secrets.FR_ARTIFACTORY_TOKEN }}
+#  release_java:
+#    name: Call publish java
+#    needs: release_prepare
+#    # uses: ./.github/workflows/release-prepare.yml # same repository
+#    uses: SecureApiGateway/secure-api-gateway-parent/.github/workflows/release-publish-java.yml@issue/812-action-release-prepare-workflow
+#    with:
+#      release_version_number: ${{ inputs.release_version_number }}
+#      release_tag_ref: ${{ needs.release_prepare.outputs.release_tag_ref }}
+#    secrets: # inherit only when is the same repository
+#      FR_ARTIFACTORY_USER: ${{ secrets.FR_ARTIFACTORY_USER }}
+#      FR_ARTIFACTORY_TOKEN: ${{ secrets.FR_ARTIFACTORY_TOKEN }}
 
   release_docker:
     name: Call publish docker
-    needs: [release_prepare, release_java]
+#    needs: [release_prepare, release_java]
+    needs: [release_prepare]
     uses: SecureApiGateway/secure-api-gateway-parent/.github/workflows/release-publish-docker.yml@issue/812-action-release-prepare-workflow
     with:
       release_version_number: ${{ inputs.release_version_number }}
