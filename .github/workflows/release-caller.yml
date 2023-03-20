@@ -47,7 +47,7 @@ jobs:
 
 #  release_docker:
 #    name: Call publish docker
-##    needs: [release_prepare, release_java]
+#    # needs: [release_prepare, release_java]
 #    needs: [release_prepare]
 #    uses: SecureApiGateway/secure-api-gateway-parent/.github/workflows/release-publish-docker.yml@issue/812-action-release-prepare-workflow
 #    with:
@@ -73,7 +73,6 @@ jobs:
         FR_ARTIFACTORY_TOKEN: ${{ secrets.FR_ARTIFACTORY_TOKEN }}
         RELEASE_REPO: ${{ secrets.RELEASE_REPO }}
 
-#    needs: [release_prepare]
 #  release_draft_and_pr:
 #    name: Call publish draft and PR
 #    needs: [release_prepare, release_java, release_docker, release_helm]
