@@ -61,11 +61,13 @@ jobs:
     release_helm:
       name: Call publish helm
 #    needs: [release_prepare, release_java, release_docker]
-      needs: [release_prepare]
+#      needs: [release_prepare]
       uses: SecureApiGateway/secure-api-gateway-parent/.github/workflows/release-publish-helm.yml@issue/812-action-release-prepare-workflow
       with:
-        release_version_number: ${{ inputs.release_version_number }}
-        release_tag_ref: ${{ needs.release_prepare.outputs.release_tag_ref }}
+#        release_version_number: ${{ inputs.release_version_number }}
+        release_version_number: 3.0.0
+        release_tag_ref: v3.0.0
+#        release_tag_ref: ${{ needs.release_prepare.outputs.release_tag_ref }}
       secrets:
         FR_ARTIFACTORY_USER: ${{ secrets.FR_ARTIFACTORY_USER }}
         FR_ARTIFACTORY_TOKEN: ${{ secrets.FR_ARTIFACTORY_TOKEN }}
