@@ -70,7 +70,7 @@ jobs:
         # release_tag_ref: ${{ needs.release_prepare.outputs.release_tag_ref }}
       secrets:
         FR_ARTIFACTORY_USER: ${{ secrets.FR_ARTIFACTORY_USER }}
-        FR_ARTIFACTORY_TOKEN: ${{ secrets.FR_ARTIFACTORY_TOKEN }}
+        FR_ARTIFACTORY_TOKEN: ${{ secrets.FR_HELM_TOKEN }}
         HELM_REPO: ${{ secrets.HELM_REPO }}
 
 #  release_draft_and_pr:
