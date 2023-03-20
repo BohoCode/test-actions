@@ -12,11 +12,14 @@ verify: clean
 	mvn verify
 
 docker-push: clean
-	mvn install package dockerfile:push -DskipTests=true -Dtag=${tag} \
+	mvn install package dockerfile:build dockerfile:push -DskipTests=true -Dtag=${tag} \
 	  -DgcrRepo=${repo} --file server/pom.xml
 
+package:
+	mvn clean install package
+
 docker: clean
-	mvn install package dockerfile:push -DskipTests=true -Dtag=${tag} \
+	mvn package dockerfile:build dockerfile:push -DskipTests=true -Dtag=${tag} \
 	  -DgcrRepo=${repo} --file server/pom.xml
 
 helm: clean
