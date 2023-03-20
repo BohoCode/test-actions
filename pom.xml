@@ -16,6 +16,7 @@
 
     <modules>
         <module>some-jar</module>
+        <module>server</module>
     </modules>
 
     <version>1.0.1-SNAPSHOT</version>
