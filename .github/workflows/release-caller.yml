@@ -45,28 +45,41 @@ jobs:
 #      FR_ARTIFACTORY_USER: ${{ secrets.FR_ARTIFACTORY_USER }}
 #      FR_ARTIFACTORY_TOKEN: ${{ secrets.FR_ARTIFACTORY_TOKEN }}
 
-  release_docker:
-    name: Call publish docker
-#    needs: [release_prepare, release_java]
-    needs: [release_prepare]
-    uses: SecureApiGateway/secure-api-gateway-parent/.github/workflows/release-publish-docker.yml@issue/812-action-release-prepare-workflow
-    with:
-      release_version_number: ${{ inputs.release_version_number }}
-      release_tag_ref: ${{ needs.release_prepare.outputs.release_tag_ref }}
-      SERVICE_NAME: test-actions-app
-    secrets:
-      GCR_KEY: ${{ secrets.GCR_KEY }}
-      RELEASE_REPO: ${{ secrets.RELEASE_REPO }}
+#  release_docker:
+#    name: Call publish docker
+##    needs: [release_prepare, release_java]
+#    needs: [release_prepare]
+#    uses: SecureApiGateway/secure-api-gateway-parent/.github/workflows/release-publish-docker.yml@issue/812-action-release-prepare-workflow
+#    with:
+#      release_version_number: ${{ inputs.release_version_number }}
+#      release_tag_ref: ${{ needs.release_prepare.outputs.release_tag_ref }}
+#      SERVICE_NAME: test-actions-app
+#    secrets:
+#      GCR_KEY: ${{ secrets.GCR_KEY }}
+#      RELEASE_REPO: ${{ secrets.RELEASE_REPO }}
 
-  release_draft_and_pr:
-    name: Call publish draft and PR
+    release_helm:
+      name: Call publish helm
 #    needs: [release_prepare, release_java, release_docker]
-    needs: [release_prepare, release_docker]
-    # uses: ./.github/workflows/release-prepare.yml # same repository
-    uses: SecureApiGateway/secure-api-gateway-parent/.github/workflows/release-publish-draft-and-pr.yml@issue/812-action-release-prepare-workflow
-    with:
-      release_version_number: ${{ inputs.release_version_number }}
-      release_branch_ref: ${{ needs.release_prepare.outputs.release_branch_ref }}
-      release_tag_ref: ${{ needs.release_prepare.outputs.release_tag_ref }}
-      release_notes: ${{ inputs.notes }}
-      reviewer: jorgesanchezperez
+      needs: [release_prepare]
+      uses: SecureApiGateway/secure-api-gateway-parent/.github/workflows/release-publish-helm.yml@issue/812-action-release-prepare-workflow
+      with:
+        release_version_number: ${{ inputs.release_version_number }}
+        release_tag_ref: ${{ needs.release_prepare.outputs.release_tag_ref }}
+      secrets:
+        FR_ARTIFACTORY_USER: ${{ secrets.FR_ARTIFACTORY_USER }}
+        FR_ARTIFACTORY_TOKEN: ${{ secrets.FR_ARTIFACTORY_TOKEN }}
+        RELEASE_REPO: ${{ secrets.RELEASE_REPO }}
+
+#    needs: [release_prepare]
+#  release_draft_and_pr:
+#    name: Call publish draft and PR
+#    needs: [release_prepare, release_java, release_docker, release_helm]
+#    # uses: ./.github/workflows/release-prepare.yml # same repository
+#    uses: SecureApiGateway/secure-api-gateway-parent/.github/workflows/release-publish-draft-and-pr.yml@issue/812-action-release-prepare-workflow
+#    with:
+#      release_version_number: ${{ inputs.release_version_number }}
+#      release_branch_ref: ${{ needs.release_prepare.outputs.release_branch_ref }}
+#      release_tag_ref: ${{ needs.release_prepare.outputs.release_tag_ref }}
+#      release_notes: ${{ inputs.notes }}
+#      reviewer: jorgesanchezperez
